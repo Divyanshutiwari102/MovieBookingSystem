@@ -1,10 +1,11 @@
-#Movie Booking System  — Frontend
+# 🎬 Moving Booking System  — 
 
-> React 18 frontend for the Spring Boot Movie Booking System backend.
+
+> Built by **Divyanshu Tiwari**
 
 ---
 
-## Setup
+## 🚀 Setup
 
 ```bash
 git clone <repo>
@@ -15,21 +16,20 @@ cp .env.example .env
 npm start
 ```
 
-Open http://localhost:3000
+Open [http://localhost:3000](http://localhost:3000)
 
 ---
 
-## Environment Variables
+## ⚙️ Environment Variables
 
 | Variable | Required | Description |
 |---|---|---|
 | `REACT_APP_API_URL` | Yes | Spring Boot URL e.g. `http://localhost:8080/api` |
-| `REACT_APP_TMDB_KEY` | Recommended | Free from https://www.themoviedb.org/settings/api |
-| `REACT_APP_RAZORPAY_KEY` | For payments | From https://dashboard.razorpay.com/ |
+| `REACT_APP_TMDB_KEY` | Recommended | Free from [themoviedb.org](https://www.themoviedb.org/) |
 
 ---
 
-## Backend API Contract (read from actual source code)
+## 📡 Backend API Contract
 
 ### AUTH
 
@@ -44,34 +44,43 @@ POST /api/auth/register
   → Returns: plain String "User registered successfully"
 ```
 
-### MOVIES (all GETs are public)
+### MOVIES — all GETs are public
 
 ```
-GET /api/movies          → List<MovieDto>
-GET /api/movies/{id}     → MovieDto
-GET /api/movies/search?title={q}
-GET /api/movies/language/{lang}
-GET /api/movies/genre/{genre}
+GET /api/movies                      → List<MovieDto>
+GET /api/movies/{id}                 → MovieDto
+GET /api/movies/search?title={q}     → List<MovieDto>
+GET /api/movies/language/{lang}      → List<MovieDto>
+GET /api/movies/genre/{genre}        → List<MovieDto>
 
-MovieDto: { id, title, description, language, genre, durationMins, releaseDate, posterUrl }
+MovieDto: {
+  id, title, description, language, genre,
+  durationMins, releaseDate, posterUrl
+}
 ```
 
-### SHOWS (all GETs are public)
+### SHOWS — all GETs are public
 
 ```
-GET /api/shows/movie/{movieId}               → List<ShowDto>
-GET /api/shows/movie/{movieId}/city/{city}   → List<ShowDto>
+GET /api/shows/movie/{movieId}                 → List<ShowDto>
+GET /api/shows/movie/{movieId}/city/{city}     → List<ShowDto>
 
 ShowDto: {
   id, startTime, endTime,
   movie: MovieDto,
-  screen: { id, name, totalSeats, theater: { id, name, address, city, totalScreens } },
-  availableSeats: [ { id, seat: { id, seatNumber, seatType, basePrice }, status, price } ]
+  screen: {
+    id, name, totalSeats,
+    theater: { id, name, address, city, totalScreens }
+  },
+  availableSeats: [
+    { id, seat: { id, seatNumber, seatType, basePrice }, status, price }
+  ]
 }
+
 Note: endTime is auto-calculated by backend (startTime + movie.durationMins)
 ```
 
-### BOOKINGS (requires USER or ADMIN role)
+### BOOKINGS — requires USER or ADMIN role
 
 ```
 POST /api/bookings
@@ -79,32 +88,34 @@ POST /api/bookings
   ⚠️  seatIds = ShowSeat.id values (availableSeats[].id), NOT Seat.id!
   → Returns: BookingDto
 
-GET /api/bookings/user/{userId}  → List<BookingDto>
-PUT /api/bookings/cancel/{id}    → BookingDto (sets status=CANCELLED, frees seats)
+GET /api/bookings/user/{userId}    → List<BookingDto>
+PUT /api/bookings/cancel/{id}      → BookingDto (sets status=CANCELLED, frees seats)
 ```
 
-### USERS (requires USER or ADMIN role)
+### USERS — requires USER or ADMIN role
 
 ```
-GET /api/users           → List<UserDto>  (used to find user after login)
-GET /api/users/{id}      → UserDto { id, name, email, phoneNumber }
+GET /api/users        → List<UserDto>  (used to find user after login)
+GET /api/users/{id}   → UserDto { id, name, email, phoneNumber }
 ```
 
 ---
 
-## Known Backend Quirks
+## ⚠️ Known Backend Quirks
 
-1. **Login returns plain String** — not JSON `{ token: "..." }`, just the raw JWT string
-2. **Login uses `@RequestParam`** — must be URL params (`?email=&password=`), not request body
-3. **No `/me` endpoint** — after login we decode JWT for email, then GET /api/users to find user
-4. **phoneNumber required** — register will fail if phoneNumber is null (DB constraint)
-5. **GlobalExceptionHandler has a bug** — `Exception.class` handler parameter is typed as `ResourceNotFoundException ex`, so generic errors (like wrong credentials) return HTTP 500 instead of 401
-6. **seatIds = ShowSeat.id** — booking takes ShowSeat IDs (from show.availableSeats[].id), not Seat IDs
-7. **CORS whitelist** — only `http://localhost:3000` is allowed by default in SecurityConfig.java
+| # | Quirk | Details |
+|---|---|---|
+| 1 | **Login returns plain String** | Not JSON `{ token: "..." }`, just the raw JWT string |
+| 2 | **Login uses `@RequestParam`** | Must be URL params (`?email=&password=`), not request body |
+| 3 | **No `/me` endpoint** | After login, decode JWT for email → GET /api/users to find user |
+| 4 | **phoneNumber required** | Register fails if phoneNumber is null (DB NOT NULL constraint) |
+| 5 | **GlobalExceptionHandler bug** | `Exception.class` handler typed as `ResourceNotFoundException` — wrong credentials return HTTP 500 instead of 401 |
+| 6 | **seatIds = ShowSeat.id** | Booking takes ShowSeat IDs from `show.availableSeats[].id`, not raw Seat IDs |
+| 7 | **CORS whitelist** | Only `http://localhost:3000` allowed by default in SecurityConfig.java |
 
 ---
 
-## Database Setup
+## 🗄️ Database Setup
 
 The `roles` table must be seeded before any user can register:
 
@@ -115,7 +126,20 @@ INSERT INTO roles (name) VALUES ('ADMIN');
 
 ---
 
-## Deployment
+## 🛠️ Tech Stack
+
+| Layer | Technology |
+|---|---|
+| UI Framework | React 18 |
+| Styling | Tailwind CSS |
+| Routing | React Router v6 |
+| HTTP Client | Axios (with JWT interceptors) |
+| State Management | Context API (AuthContext) |
+| Image CDN | TMDB (`https://image.tmdb.org/t/p/w500`) |
+
+---
+
+## 📦 Deployment
 
 ```bash
 npm run build
@@ -123,9 +147,21 @@ npm run build
 ```
 
 For production, update CORS in `SecurityConfig.java`:
+
 ```java
 configuration.setAllowedOrigins(List.of(
     "http://localhost:3000",
     "https://your-production-domain.com"
 ));
 ```
+
+---
+
+## 👨‍💻 Author
+
+**Divyanshu Tiwari**  
+Full Stack Developer — React.js · Spring Boot · MySQL
+
+---
+
+> ⭐ If you found this project useful, give it a star!
