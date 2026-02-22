@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🎬 BookMyShow Clone
+# 🎬 Movie Booking System 
 
 ### A Full-Stack Movie Booking Platform
 
@@ -18,7 +18,7 @@
 
 <br/>
 
-**Built by [Divyanshu Tiwari](https://github.com/divyanshu)**
+**Built by [Divyanshu Tiwari](https://github.com/Divyanshutiwari102)**
 
 </div>
 
@@ -184,20 +184,17 @@ BookMyShow-Clone/
 ### Prerequisites
 
 ```
-Node.js  >= 16
+React    >= 18 
 Java     >= 17
 MySQL    >= 8.0
 Maven    >= 3.6
 ```
 
-### 1. Clone
 
-```bash
-git clone https://github.com/divyanshu/bookmyshow-clone.git
-cd bookmyshow-clone
-```
 
-### 2. Backend Setup
+
+
+### 1. Backend Setup
 
 ```bash
 cd backend
@@ -403,7 +400,7 @@ Full Stack Developer
 
 React.js · Spring Boot · MySQL · Java
 
-[![GitHub](https://img.shields.io/badge/GitHub-divyanshu-181717?style=for-the-badge&logo=github)](https://github.com/divyanshu)
+[![GitHub](https://img.shields.io/badge/GitHub-divyanshu-181717?style=for-the-badge&logo=github)](https://github.com/Divyanshutiwari102)
 
 ---
 
