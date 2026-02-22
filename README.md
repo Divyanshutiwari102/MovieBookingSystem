@@ -112,7 +112,7 @@
 ## Project Structure
 
 ```
-BookMyShow-Clone/
+Movie Booking System/
 │
 ├── frontend/                           # React Application
 │   ├── src/
@@ -363,20 +363,6 @@ JwtAuthenticationFilter
 
 ---
 
-## Deployment
-
-### Frontend
-
-```bash
-npm run build
-# Deploy build/ to Netlify or Vercel
-```
-
-### Backend
-
-```bash
-mvn clean package
-java -jar target/MovieBookingSystem-0.0.1-SNAPSHOT.jar
 ```
 
 ### Production Checklist
