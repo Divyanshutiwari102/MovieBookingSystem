@@ -361,9 +361,6 @@ JwtAuthenticationFilter
 | 6 | seatIds must be ShowSeat IDs | Use availableSeats[].id from show response |
 | 7 | CORS only allows localhost:3000 | Update SecurityConfig for production |
 
----
-
-```
 
 ### Production Checklist
 
