@@ -389,6 +389,6 @@ React.js · Spring Boot · MySQL · Java
 
 *If you found this project useful, please give it a star!*
 
-*Made with love by Divyanshu Tiwari*
+
 
 </div>
