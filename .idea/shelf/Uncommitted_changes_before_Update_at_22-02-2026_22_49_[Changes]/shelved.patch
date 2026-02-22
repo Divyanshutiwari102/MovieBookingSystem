@@ -1,0 +1,463 @@
+Index: Movie Booking System Backend/src/main/java/com/cfs/MovieBookingSystem/MovieBookingSystemApplication.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.cfs.MovieBookingSystem;\r\n\r\nimport org.springframework.boot.SpringApplication;\r\nimport org.springframework.boot.autoconfigure.SpringBootApplication;\r\n\r\n@SpringBootApplication\r\npublic class MovieBookingSystemApplication {\r\n\r\n\tpublic static void main(String[] args) {\r\n\t\tSpringApplication.run(MovieBookingSystemApplication.class, args);\r\n\t}\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Movie Booking System Backend/src/main/java/com/cfs/MovieBookingSystem/MovieBookingSystemApplication.java b/Movie Booking System Backend/src/main/java/com/cfs/MovieBookingSystem/MovieBookingSystemApplication.java
+--- a/Movie Booking System Backend/src/main/java/com/cfs/MovieBookingSystem/MovieBookingSystemApplication.java	(revision 3b5efcf775f66429a4508d26c32a2701be3782ca)
++++ b/Movie Booking System Backend/src/main/java/com/cfs/MovieBookingSystem/MovieBookingSystemApplication.java	(date 1771780065387)
+@@ -2,6 +2,8 @@
+ 
+ import org.springframework.boot.SpringApplication;
+ import org.springframework.boot.autoconfigure.SpringBootApplication;
++import org.springframework.context.annotation.Bean;
++import org.springframework.web.client.RestTemplate;
+ 
+ @SpringBootApplication
+ public class MovieBookingSystemApplication {
+@@ -10,4 +12,8 @@
+ 		SpringApplication.run(MovieBookingSystemApplication.class, args);
+ 	}
+ 
++	@Bean
++	public RestTemplate restTemplate() {
++		return new RestTemplate();
++	}
+ }
+Index: Frontend/src/services/demoData.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>/**\r\n * Demo data — 50 movies exactly as requested.\r\n * All posterUrl = TMDB CDN path → https://image.tmdb.org/t/p/w500{posterUrl}\r\n * No API key needed. High quality w500 images.\r\n */\r\n\r\nexport const DEMO_MOVIES = [\r\n\r\n  // ── 1. Oppenheimer ────────────────────────────────────────────────\r\n  { id: 872585,  title: 'Oppenheimer',\r\n    language: 'English', genre: 'Drama',       durationMins: 180, releaseDate: '2023-07-21',\r\n    posterUrl: '/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg',\r\n    description: 'The story of J. Robert Oppenheimer and his pivotal role in the Manhattan Project to develop the first atomic bomb.' },\r\n\r\n  // ── 2. Animal ─────────────────────────────────────────────────────\r\n  { id: 1014246, title: 'Animal',\r\n    language: 'Hindi',   genre: 'Action',      durationMins: 201, releaseDate: '2023-12-01',\r\n    posterUrl: '/jafJMR9m7gnBBfRrRf0YXF7GIIY.jpg',\r\n    description: 'A man returns to India after years abroad and becomes his father\\'s ruthless protector, descending into violence.' },\r\n\r\n  // ── 3. Leo ────────────────────────────────────────────────────────\r\n  { id: 927489,  title: 'Leo',\r\n    language: 'Tamil',   genre: 'Action',      durationMins: 164, releaseDate: '2023-10-19',\r\n    posterUrl: '/bClpMFRRYGIoUrADXiHOZgZAqiQ.jpg',\r\n    description: 'A mild-mannered cafe owner is forced to confront his mysterious and dangerous past.' },\r\n\r\n  // ── 4. Salaar: Part 1 – Ceasefire ────────────────────────────────\r\n  { id: 1156593, title: 'Salaar: Ceasefire',\r\n    language: 'Hindi',   genre: 'Action',      durationMins: 175, releaseDate: '2023-12-22',\r\n    posterUrl: '/3mDaBHqnHvFJuCzRlNPnSfLJqtl.jpg',\r\n    description: 'A fierce warrior\\'s promise to his dying friend forces him to return to a kingdom and protect his friend\\'s son.' },\r\n\r\n  // ── 5. Dune: Part Two ─────────────────────────────────────────────\r\n  { id: 438631,  title: 'Dune: Part Two',\r\n    language: 'English', genre: 'Sci-Fi',      durationMins: 166, releaseDate: '2024-03-01',\r\n    posterUrl: '/1pdfLvkbY9ohJlCjQH2CZjjYVvJ.jpg',\r\n    description: 'Paul Atreides unites with Chani and the Fremen while seeking revenge against the conspirators who destroyed his family.' },\r\n\r\n  // ── 6. Kill ───────────────────────────────────────────────────────\r\n  { id: 1251094, title: 'Kill',\r\n    language: 'Hindi',   genre: 'Action',      durationMins: 105, releaseDate: '2024-07-05',\r\n    posterUrl: '/mICSnF38uRo0GCFz1bfMEkOZKCG.jpg',\r\n    description: 'An army commando must protect a group of passengers on a train hijacked by 40 ruthless criminals.' },\r\n\r\n  // ── 7. Fighter ────────────────────────────────────────────────────\r\n  { id: 1075794, title: 'Fighter',\r\n    language: 'Hindi',   genre: 'Action',      durationMins: 166, releaseDate: '2024-01-25',\r\n    posterUrl: '/bBuFoIFBBa1QkDSmZdEHjyIHMIF.jpg',\r\n    description: 'India\\'s first aerial action franchise following the brave pilots of the Indian Air Force.' },\r\n\r\n  // ── 8. Jawan ──────────────────────────────────────────────────────\r\n  { id: 979275,  title: 'Jawan',\r\n    language: 'Hindi',   genre: 'Action',      durationMins: 169, releaseDate: '2023-09-07',\r\n    posterUrl: '/oqGqsOQgqAiqWFTSYHlGNpD1w9s.jpg',\r\n    description: 'A high-octane action thriller about a man driven to rectify the wrongs in society, leading to a showdown between him and a ruthless industrialist.' },\r\n\r\n  // ── 9. Pathaan ────────────────────────────────────────────────────\r\n  { id: 918289,  title: 'Pathaan',\r\n    language: 'Hindi',   genre: 'Action',      durationMins: 146, releaseDate: '2023-01-25',\r\n    posterUrl: '/hMhOJ9cOJMDdEPyD0K6JuCH0gTx.jpg',\r\n    description: 'An Indian spy takes on the leader of a rogue mercenary organisation that poses a grave threat to national security.' },\r\n\r\n  // ── 10. Vikram Vedha ──────────────────────────────────────────────\r\n  { id: 853609,  title: 'Vikram Vedha',\r\n    language: 'Hindi',   genre: 'Thriller',    durationMins: 150, releaseDate: '2022-09-30',\r\n    posterUrl: '/pzDFmHkxMz4eiVVkhj2n4VEL0ek.jpg',\r\n    description: 'A tough cop tries to nab an equally tough gangster, but is taken aback when the gangster surrenders and begins telling him stories.' },\r\n\r\n  // ── 11. The Batman ────────────────────────────────────────────────\r\n  { id: 414906,  title: 'The Batman',\r\n    language: 'English', genre: 'Action',      durationMins: 176, releaseDate: '2022-03-04',\r\n    posterUrl: '/74xTEgt7R36Fpooo50r9T25onhq.jpg',\r\n    description: 'Batman ventures into Gotham City\\'s underworld when a sadistic killer leaves behind a trail of cryptic clues.' },\r\n\r\n  // ── 12. Everything Everywhere All at Once ─────────────────────────\r\n  { id: 545611,  title: 'Everything Everywhere All at Once',\r\n    language: 'English', genre: 'Sci-Fi',      durationMins: 139, releaseDate: '2022-03-25',\r\n    posterUrl: '/w3LxiVYdWWRvEVdn5RYq6jIqkb1.jpg',\r\n    description: 'A middle-aged Chinese immigrant is swept up in an insane adventure where she alone can save the multiverse by exploring other universes.' },\r\n\r\n  // ── 13. Top Gun: Maverick ─────────────────────────────────────────\r\n  { id: 361743,  title: 'Top Gun: Maverick',\r\n    language: 'English', genre: 'Action',      durationMins: 130, releaseDate: '2022-05-27',\r\n    posterUrl: '/62HCnUTHOIF3iKBHxuYIdnSqkAz.jpg',\r\n    description: 'After 30 years, Pete \"Maverick\" Mitchell is still pushing the envelope as a top naval aviator, training a new generation of Top Gun graduates.' },\r\n\r\n  // ── 14. Nope ──────────────────────────────────────────────────────\r\n  { id: 762504,  title: 'Nope',\r\n    language: 'English', genre: 'Horror',      durationMins: 130, releaseDate: '2022-07-22',\r\n    posterUrl: '/AcKVlWaNVVVFQwro3nLXqPljcYA.jpg',\r\n    description: 'A UFO sighting turns horrifying for the inhabitants of a secluded California gulch, including two siblings who witness something inhuman.' },\r\n\r\n  // ── 15. Barbarian ─────────────────────────────────────────────────\r\n  { id: 760098,  title: 'Barbarian',\r\n    language: 'English', genre: 'Horror',      durationMins: 102, releaseDate: '2022-09-09',\r\n    posterUrl: '/d0KFO0pW8AJ0LUzBxfF0uPt6YG5.jpg',\r\n    description: 'A woman discovers her Airbnb rental is already occupied by a stranger and must navigate a terrifying secret beneath the house.' },\r\n\r\n  // ── 16. The Menu ──────────────────────────────────────────────────\r\n  { id: 766507,  title: 'The Menu',\r\n    language: 'English', genre: 'Thriller',    durationMins: 107, releaseDate: '2022-11-18',\r\n    posterUrl: '/jZSNJhQzqBCRCQCxm4Bwzrjzx6h.jpg',\r\n    description: 'A young couple travels to a remote island to eat at an exclusive restaurant where the chef has prepared a unique menu with shocking surprises.' },\r\n\r\n  // ── 17. Smile ─────────────────────────────────────────────────────\r\n  { id: 838209,  title: 'Smile',\r\n    language: 'English', genre: 'Horror',      durationMins: 115, releaseDate: '2022-09-30',\r\n    posterUrl: '/aPqcQwu4VGEewPhagqNNjiKVHj8.jpg',\r\n    description: 'After witnessing a bizarre, traumatic incident involving a patient, a doctor begins experiencing frightening occurrences.' },\r\n\r\n  // ── 18. Talk to Me ────────────────────────────────────────────────\r\n  { id: 967847,  title: 'Talk to Me',\r\n    language: 'English', genre: 'Horror',      durationMins: 95,  releaseDate: '2023-07-28',\r\n    posterUrl: '/kdPMnXO7elAh9mNqQ8PdMoXJSWz.jpg',\r\n    description: 'A group of friends discover a way to conjure spirits using an embalmed hand — but what begins as fun quickly turns sinister.' },\r\n\r\n  // ── 19. The Nun II ────────────────────────────────────────────────\r\n  { id: 507086,  title: 'The Nun II',\r\n    language: 'English', genre: 'Horror',      durationMins: 110, releaseDate: '2023-09-08',\r\n    posterUrl: '/5gzzkR7y3hnY8AD1wXjCnVlHba5.jpg',\r\n    description: 'In 1956 France, a priest is murdered. A nun and a novitiate are sent by the Vatican to investigate, confronting the demonic force Valak.' },\r\n\r\n  // ── 20. Evil Dead Rise ────────────────────────────────────────────\r\n  { id: 713704,  title: 'Evil Dead Rise',\r\n    language: 'English', genre: 'Horror',      durationMins: 97,  releaseDate: '2023-04-21',\r\n    posterUrl: '/5ik1gXSCKOGMRl71mfvt1fhG0dA.jpg',\r\n    description: 'A reunion between two estranged sisters is cut short by the rise of flesh-possessing demons in a Los Angeles apartment building.' },\r\n\r\n  // ── 21. Suzume ────────────────────────────────────────────────────\r\n  { id: 1056360, title: 'Suzume',\r\n    language: 'Japanese', genre: 'Animation',  durationMins: 122, releaseDate: '2023-04-14',\r\n    posterUrl: '/lN2STXouEJgDOIE7DpnYhFKiBAO.jpg',\r\n    description: 'A teenage girl helps a mysterious young man close a supernatural door before it can unleash disasters across Japan.' },\r\n\r\n  // ── 22. The Super Mario Bros. Movie ──────────────────────────────\r\n  { id: 502356,  title: 'The Super Mario Bros. Movie',\r\n    language: 'English', genre: 'Animation',   durationMins: 92,  releaseDate: '2023-04-05',\r\n    posterUrl: '/qNBAXBIQlnOThrVvA6mA2B5ggkM.jpg',\r\n    description: 'A plumber named Mario travels through an underground maze with his brother Luigi, trying to save a captured princess.' },\r\n\r\n  // ── 23. Spider-Man: Across the Spider-Verse ───────────────────────\r\n  { id: 569094,  title: 'Spider-Man: Across the Spider-Verse',\r\n    language: 'English', genre: 'Animation',   durationMins: 140, releaseDate: '2023-06-02',\r\n    posterUrl: '/8Vt6mWEReuy4Of61Lnj5Xj704m8.jpg',\r\n    description: 'Miles Morales catapults across the Multiverse, where he encounters a team of Spider-People charged with protecting its very existence.' },\r\n\r\n  // ── 24. Elemental ─────────────────────────────────────────────────\r\n  { id: 976573,  title: 'Elemental',\r\n    language: 'English', genre: 'Animation',   durationMins: 101, releaseDate: '2023-06-16',\r\n    posterUrl: '/6oH378KUfgKRMLNcJHQEQS7XFNM.jpg',\r\n    description: 'In a city where fire, water, land and air residents live together, a fiery young woman and a go-with-the-flow guy discover something elemental.' },\r\n\r\n  // ── 25. Wish ──────────────────────────────────────────────────────\r\n  { id: 1022789, title: 'Wish',\r\n    language: 'English', genre: 'Animation',   durationMins: 95,  releaseDate: '2023-11-22',\r\n    posterUrl: '/ACoZMCKUVj1jKMIllBhXPJHjMJY.jpg',\r\n    description: 'A young girl named Asha wishes on a star and gets a more direct answer than she expected when a cosmic force — a little ball of boundless energy — comes to her aid.' },\r\n\r\n  // ── 26. Drishyam 2 ────────────────────────────────────────────────\r\n  { id: 882598,  title: 'Drishyam 2',\r\n    language: 'Hindi',   genre: 'Thriller',    durationMins: 152, releaseDate: '2022-11-18',\r\n    posterUrl: '/BHW7sqHpF0QVFdPq9EXbKFIpZjj.jpg',\r\n    description: 'Vijay Salgaonkar must once again protect his family from the law as new evidence threatens to uncover the truth from seven years ago.' },\r\n\r\n  // ── 27. 12th Fail ────────────────────────────────────────────────\r\n  { id: 1234261, title: '12th Fail',\r\n    language: 'Hindi',   genre: 'Drama',       durationMins: 147, releaseDate: '2023-10-27',\r\n    posterUrl: '/tlQKPWNpnIJtNLgNOmTI9jHRMi0.jpg',\r\n    description: 'The inspiring real life story of IPS Officer Manoj Kumar Sharma who failed his 12th exams but never gave up on his dream.' },\r\n\r\n  // ── 28. Kantara ───────────────────────────────────────────────────\r\n  { id: 1077280, title: 'Kantara',\r\n    language: 'Kannada', genre: 'Action',      durationMins: 148, releaseDate: '2022-09-30',\r\n    posterUrl: '/bljXxJBjaNwbXbfDqABiGrXAw6H.jpg',\r\n    description: 'A conflict between humans and nature about land and its ownership culminates in a divine battle between a forest official and a local hero.' },\r\n\r\n  // ── 29. Dasara ────────────────────────────────────────────────────\r\n  { id: 1058688, title: 'Dasara',\r\n    language: 'Telugu',  genre: 'Drama',       durationMins: 175, releaseDate: '2023-03-30',\r\n    posterUrl: '/dBXLkJjKxNMpELrjhVGJCxlHaqS.jpg',\r\n    description: 'In the coal mines of Singareni, a carefree coal miner is forced to confront his past when circumstances take a dark turn.' },\r\n\r\n  // ── 30. Maaveeran ────────────────────────────────────────────────\r\n  { id: 1173583, title: 'Maaveeran',\r\n    language: 'Tamil',   genre: 'Action',      durationMins: 160, releaseDate: '2023-07-14',\r\n    posterUrl: '/clZl8WsXHvV3ZZr0rVKdVknjFoP.jpg',\r\n    description: 'A timid cartoonist begins hearing the voice of a superhero he created and gains confidence to fight against corrupt officials.' },\r\n\r\n  // ── 31. The Roundup: No Way Out ───────────────────────────────────\r\n  { id: 940551,  title: 'The Roundup: No Way Out',\r\n    language: 'Korean',  genre: 'Action',      durationMins: 105, releaseDate: '2023-05-31',\r\n    posterUrl: '/9cnyJBUC2HNYRNcgpTCEhXukiSX.jpg',\r\n    description: 'Detective Ma Seok-do takes on a drug ring operation linked to a violent murder case.' },\r\n\r\n  // ── 32. Decision to Leave ─────────────────────────────────────────\r\n  { id: 838982,  title: 'Decision to Leave',\r\n    language: 'Korean',  genre: 'Thriller',    durationMins: 138, releaseDate: '2022-10-14',\r\n    posterUrl: '/zgNxZOiuwqvnuCJmTOGwFNAbzNE.jpg',\r\n    description: 'A detective investigating a man\\'s death in the mountains meets the dead man\\'s mysterious wife, and begins to suspect her.' },\r\n\r\n  // ── 33. Concrete Utopia ───────────────────────────────────────────\r\n  { id: 1074724, title: 'Concrete Utopia',\r\n    language: 'Korean',  genre: 'Drama',       durationMins: 130, releaseDate: '2023-08-09',\r\n    posterUrl: '/7K2riGJMkbMH3jkVi2Cko7fjPDJ.jpg',\r\n    description: 'After a massive earthquake destroys Seoul, the only survivors in a ruined apartment complex must band together to survive.' },\r\n\r\n  // ── 34. Exhuma ────────────────────────────────────────────────────\r\n  { id: 1209290, title: 'Exhuma',\r\n    language: 'Korean',  genre: 'Horror',      durationMins: 134, releaseDate: '2024-02-22',\r\n    posterUrl: '/4HodP5CZ4rOhqBMmrIqmSAp7pCG.jpg',\r\n    description: 'Shamans are hired to relocate the grave of a wealthy family patriarch, but the exhumation leads to terrifying supernatural events.' },\r\n\r\n  // ── 35. The Call ──────────────────────────────────────────────────\r\n  { id: 632622,  title: 'The Call',\r\n    language: 'Korean',  genre: 'Thriller',    durationMins: 112, releaseDate: '2020-11-27',\r\n    posterUrl: '/ahxuRYb9KYBi8hcJULgkKC5fwG1.jpg',\r\n    description: 'Two women living 20 years apart connect through a phone call and soon discover their actions can directly affect the other\\'s timeline.' },\r\n\r\n  // ── 36. The Killer ────────────────────────────────────────────────\r\n  { id: 678512,  title: 'The Killer',\r\n    language: 'English', genre: 'Thriller',    durationMins: 118, releaseDate: '2023-10-27',\r\n    posterUrl: '/e3G9MFZxLMQmMBKSBHrZuuZmSEf.jpg',\r\n    description: 'A hitman with a cold, calculating mind goes on a relentless pursuit after a fateful encounter threatens his way of life.' },\r\n\r\n  // ── 37. Extraction 2 ──────────────────────────────────────────────\r\n  { id: 616037,  title: 'Extraction 2',\r\n    language: 'English', genre: 'Action',      durationMins: 122, releaseDate: '2023-06-16',\r\n    posterUrl: '/mHwjGHFbKvGVBOLfHUVtAhMBUua.jpg',\r\n    description: 'Tyler Rake returns from the brink of death with a new mission: to rescue the imprisoned family of a ruthless Georgian gangster.' },\r\n\r\n  // ── 38. Rebel Moon – Part One ─────────────────────────────────────\r\n  { id: 848538,  title: 'Rebel Moon – Part One',\r\n    language: 'English', genre: 'Sci-Fi',      durationMins: 134, releaseDate: '2023-12-22',\r\n    posterUrl: '/ui4DrH1cKk2vkHshpOJOWWXNXrf.jpg',\r\n    description: 'A peaceful colony on the edge of the galaxy is threatened by the armies of a tyrannical regent named Balisarius.' },\r\n\r\n  // ── 39. Civil War ─────────────────────────────────────────────────\r\n  { id: 1056646, title: 'Civil War',\r\n    language: 'English', genre: 'Thriller',    durationMins: 109, releaseDate: '2024-04-12',\r\n    posterUrl: '/sh7Rg8Er3tFcN9BpKIPOMvALgZd.jpg',\r\n    description: 'A team of journalists travel across a war-ravaged America during a second civil war, documenting the conflict as they go.' },\r\n\r\n  // ── 40. Kingdom of the Planet of the Apes ────────────────────────\r\n  { id: 653346,  title: 'Kingdom of the Planet of the Apes',\r\n    language: 'English', genre: 'Sci-Fi',      durationMins: 145, releaseDate: '2024-05-10',\r\n    posterUrl: '/gKkl37BQuKTanygYQG1pyYgLVgf.jpg',\r\n    description: 'Many years after the reign of Caesar, a young ape goes on a journey that leads him to question everything he\\'s been taught.' },\r\n\r\n  // ── 41. Deadpool & Wolverine ──────────────────────────────────────\r\n  { id: 533535,  title: 'Deadpool & Wolverine',\r\n    language: 'English', genre: 'Action',      durationMins: 128, releaseDate: '2024-07-26',\r\n    posterUrl: '/8cdWjvZQUExUUTzyp4t6EDMubfO.jpg',\r\n    description: 'A listless Wade Wilson toils away in civilian life until he\\'s brought back to pull off an impossible mission with Wolverine.' },\r\n\r\n  // ── 42. Godzilla x Kong: The New Empire ──────────────────────────\r\n  { id: 823464,  title: 'Godzilla x Kong: The New Empire',\r\n    language: 'English', genre: 'Action',      durationMins: 115, releaseDate: '2024-03-29',\r\n    posterUrl: '/nIVkDEDPJu2dLZMQ5GHAmSQ8K3P.jpg',\r\n    description: 'Two ancient titans, Godzilla and Kong, clash in an epic battle as humans unravel their intertwined origins and the mystery of Skull Island.' },\r\n\r\n  // ── 43. Bhool Bhulaiyaa 2 ─────────────────────────────────────────\r\n  { id: 809462,  title: 'Bhool Bhulaiyaa 2',\r\n    language: 'Hindi',   genre: 'Comedy',      durationMins: 143, releaseDate: '2022-05-20',\r\n    posterUrl: '/zJTbJPRlSKdDSmFMD8HaFxf58M3.jpg',\r\n    description: 'A young man accidentally summons the spirit of Manjulika when he visits a haunted haveli with his girlfriend\\'s family.' },\r\n\r\n  // ── 44. Stree 2 ───────────────────────────────────────────────────\r\n  { id: 1300344, title: 'Stree 2',\r\n    language: 'Hindi',   genre: 'Comedy',      durationMins: 157, releaseDate: '2024-08-15',\r\n    posterUrl: '/99mCOBfMNE0TzbuS8EBQmFrTBln.jpg',\r\n    description: 'The men of Chanderi face a new supernatural threat as a headless ghost targets women, forcing them to seek the mysterious Stree\\'s help.' },\r\n\r\n  // ── 45. Aavesham ──────────────────────────────────────────────────\r\n  { id: 1362570, title: 'Aavesham',\r\n    language: 'Malayalam', genre: 'Comedy',    durationMins: 163, releaseDate: '2024-04-11',\r\n    posterUrl: '/3IHNheHPAEMkuZDHWOVG7lPe4LH.jpg',\r\n    description: 'Three engineering students hire a notorious gangster as their bodyguard against college bullies, with unexpectedly hilarious consequences.' },\r\n\r\n  // ── 46. Kalki 2898 AD ─────────────────────────────────────────────\r\n  { id: 1297585, title: 'Kalki 2898 AD',\r\n    language: 'Telugu',  genre: 'Sci-Fi',      durationMins: 181, releaseDate: '2024-06-27',\r\n    posterUrl: '/2y8HRgAbvpdAFO6W0cekV4ZcHJy.jpg',\r\n    description: 'Set in 2898 AD, a dystopian future blending Hindu mythology and sci-fi, where the 10th avatar of Vishnu is destined to appear.' },\r\n\r\n  // ── 47. Pushpa 2: The Rule ────────────────────────────────────────\r\n  { id: 1087822, title: 'Pushpa 2: The Rule',\r\n    language: 'Hindi',   genre: 'Action',      durationMins: 210, releaseDate: '2024-12-05',\r\n    posterUrl: '/pDIHkjHwGEGU6mVUJvdHOivvFRs.jpg',\r\n    description: 'Pushpa Raj expands his red sandalwood smuggling empire while coming face to face with his arch-nemesis Bhanwar Singh Shekawat.' },\r\n\r\n  // ── 48. The Substance ─────────────────────────────────────────────\r\n  { id: 933260,  title: 'The Substance',\r\n    language: 'English', genre: 'Horror',      durationMins: 140, releaseDate: '2024-09-20',\r\n    posterUrl: '/lqoMzCcZYEFK729d6qzt349fB4o.jpg',\r\n    description: 'A fading celebrity takes a black-market drug called The Substance that creates a younger, better, perfect version of herself.' },\r\n\r\n  // ── 49. Longlegs ──────────────────────────────────────────────────\r\n  { id: 1064028, title: 'Longlegs',\r\n    language: 'English', genre: 'Thriller',    durationMins: 101, releaseDate: '2024-07-12',\r\n    posterUrl: '/kvbBSYRSrSEFXFlKiOvK3Ct2yyg.jpg',\r\n    description: 'An FBI agent is drawn into a serial killer investigation involving coded messages and a mysterious figure called Longlegs.' },\r\n\r\n  // ── 50. The Fall Guy ──────────────────────────────────────────────\r\n  { id: 746036,  title: 'The Fall Guy',\r\n    language: 'English', genre: 'Action',      durationMins: 126, releaseDate: '2024-05-03',\r\n    posterUrl: '/tSz1qsmSJon0rqjHBxXZmrotuse.jpg',\r\n    description: 'A stuntman is drawn back to the industry and into a mystery surrounding a major film production.' },\r\n];\r\n\r\n// ── Hero carousel backdrops ──────────────────────────────────────────────────\r\nexport const DEMO_BACKDROPS = [\r\n  { id: 872585,  title: 'Oppenheimer',           backdrop_path: '/rLb2cwF3Pazuxaj0sRXQ037tGI1.jpg', description: 'The story of J. Robert Oppenheimer and the development of the first nuclear weapon.' },\r\n  { id: 533535,  title: 'Deadpool & Wolverine',  backdrop_path: '/yDHYTfA3R0jFYba16jBB1ef8oIt.jpg', description: 'Wade Wilson is brought back for an impossible mission alongside Wolverine.' },\r\n  { id: 438631,  title: 'Dune: Part Two',        backdrop_path: '/xOMo8BRK7PfcJv9JCnx7s5hj0NX.jpg', description: 'Paul Atreides unites with the Fremen while seeking revenge against his enemies.' },\r\n  { id: 1014246, title: 'Animal',                backdrop_path: '/1LRLLWGvs5sZdTzuMWGOCMxm7k9.jpg', description: 'A man returns to India and becomes his father\\'s ruthless and unstoppable protector.' },\r\n  { id: 1297585, title: 'Kalki 2898 AD',         backdrop_path: '/5a4JdoFwll5DRtKMe7JLuGQ9yJm.jpg', description: 'In a dystopian future blending Hindu mythology and sci-fi, the 10th avatar rises.' },\r\n];
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Frontend/src/services/demoData.js b/Frontend/src/services/demoData.js
+--- a/Frontend/src/services/demoData.js	(revision 3b5efcf775f66429a4508d26c32a2701be3782ca)
++++ b/Frontend/src/services/demoData.js	(date 1771770378817)
+@@ -1,8 +1,3 @@
+-/**
+- * Demo data — 50 movies exactly as requested.
+- * All posterUrl = TMDB CDN path → https://image.tmdb.org/t/p/w500{posterUrl}
+- * No API key needed. High quality w500 images.
+- */
+ 
+ export const DEMO_MOVIES = [
+ 
+Index: Movie Booking System Backend/src/main/java/com/cfs/MovieBookingSystem/service/TmdbService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Movie Booking System Backend/src/main/java/com/cfs/MovieBookingSystem/service/TmdbService.java b/Movie Booking System Backend/src/main/java/com/cfs/MovieBookingSystem/service/TmdbService.java
+new file mode 100644
+--- /dev/null	(date 1771780519022)
++++ b/Movie Booking System Backend/src/main/java/com/cfs/MovieBookingSystem/service/TmdbService.java	(date 1771780519022)
+@@ -0,0 +1,64 @@
++package com.cfs.MovieBookingSystem.service;
++
++import org.springframework.beans.factory.annotation.Value;
++import org.springframework.core.ParameterizedTypeReference;
++import org.springframework.http.HttpMethod;
++import org.springframework.http.ResponseEntity;
++import org.springframework.stereotype.Service;
++import org.springframework.web.client.RestTemplate;
++
++import java.util.ArrayList;
++import java.util.List;
++import java.util.Map;
++
++@Service
++public class TmdbService {
++
++    @Value("${tmdb.api.key}")
++    private String apiKey;
++
++    private static final String BASE = "https://api.themoviedb.org/3";
++
++    private final RestTemplate restTemplate;
++
++    public TmdbService(RestTemplate restTemplate) {
++        this.restTemplate = restTemplate;
++    }
++
++    public List<Map<String, Object>> fetchNowPlaying() {
++        return fetchResults(BASE + "/movie/now_playing?api_key=" + apiKey + "&language=en-US&page=1");
++    }
++
++    public List<Map<String, Object>> fetchPopular() {
++        return fetchResults(BASE + "/movie/popular?api_key=" + apiKey + "&language=en-US&page=1");
++    }
++
++    public List<Map<String, Object>> fetchTopRated() {
++        return fetchResults(BASE + "/movie/top_rated?api_key=" + apiKey + "&language=en-US&page=1");
++    }
++
++    public List<Map<String, Object>> fetchUpcoming() {
++        return fetchResults(BASE + "/movie/upcoming?api_key=" + apiKey + "&language=en-US&page=1");
++    }
++
++    @SuppressWarnings("unchecked")
++    private List<Map<String, Object>> fetchResults(String url) {
++        try {
++            ResponseEntity<Map<String, Object>> response = restTemplate.exchange(
++                    url,
++                    HttpMethod.GET,
++                    null,
++                    new ParameterizedTypeReference<Map<String, Object>>() {}
++            );
++            Map<String, Object> body = response.getBody();
++            if (body == null) return new ArrayList<>();
++            Object results = body.get("results");
++            if (results instanceof List) {
++                return (List<Map<String, Object>>) results;
++            }
++        } catch (Exception e) {
++            System.out.println("TMDB fetch failed: " + e.getMessage());
++        }
++        return new ArrayList<>();
++    }
++}
+\ No newline at end of file
+Index: Frontend/src/services/api.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>/**\r\n * ============================================================\r\n * API SERVICE — Mapped exactly to the Spring Boot backend code\r\n * ============================================================\r\n *\r\n * CRITICAL BACKEND FACTS (read from actual source):\r\n *\r\n * ── AUTH ────────────────────────────────────────────────────\r\n * POST /api/auth/login\r\n *   → @RequestParam String email, @RequestParam String password\r\n *   → MUST be sent as URL query params, NOT as JSON body!\r\n *   → Returns: plain String JWT token  e.g. \"eyJhbGci...\"\r\n *\r\n * POST /api/auth/register\r\n *   → @RequestBody RegisterRequest { name, email, password, phoneNumber, roles? }\r\n *   → phoneNumber is @Column(nullable=false) — REQUIRED\r\n *   → Returns: plain String \"User registered successfully\"\r\n *\r\n * JWT subject = email   (from jwtUtil.generateToken(email))\r\n * JWT expiry  = 1 hour  (1000 * 60 * 60 ms)\r\n * No refresh token, no /me endpoint\r\n *\r\n * ── MOVIES (all GETs are public, no auth needed) ─────────────\r\n * MovieDto fields: id, title, description, language, genre, durationMins, releaseDate, posterUrl\r\n *\r\n * ── SHOWS ────────────────────────────────────────────────────\r\n * ShowDto: { id, startTime (ISO), endTime (ISO),\r\n *   movie: MovieDto,\r\n *   screen: { id, name, totalSeats, theater: { id, name, address, city, totalScreens } },\r\n *   availableSeats: [ { id, seat: { id, seatNumber, seatType, basePrice }, status, price } ]\r\n * }\r\n * endTime is AUTO-CALCULATED by backend (startTime + movie.durationMins)\r\n *\r\n * ── BOOKINGS ─────────────────────────────────────────────────\r\n * POST /api/bookings\r\n *   → @RequestBody { userId, showId, seatIds: Long[], paymentMethod }\r\n *   → seatIds = ShowSeat IDs (the `id` from availableSeats array), NOT Seat IDs!\r\n *   → Requires: USER or ADMIN role (JWT token in header)\r\n *\r\n * BookingDto: { id, bookingNumber, bookingTime, user, show, status, totalAmount, seats[], payment }\r\n *\r\n * ── USERS ────────────────────────────────────────────────────\r\n * GET /api/users     → List<UserDto>  (requires USER or ADMIN auth)\r\n * GET /api/users/{id} → UserDto { id, name, email, phoneNumber }\r\n * No /me endpoint — use GET /api/users then filter by email from JWT\r\n *\r\n * ── SECURITY ─────────────────────────────────────────────────\r\n * CORS: only http://localhost:3000 is whitelisted\r\n * All requests with JWT need: Authorization: Bearer <token>\r\n */\r\n\r\nimport axios from 'axios';\r\n\r\nexport const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:8080/api';\r\n\r\n// TMDB — only used for fallback posters/backdrops when backend has no image data\r\nexport const TMDB_KEY  = process.env.REACT_APP_TMDB_KEY || '';\r\nexport const TMDB_BASE = 'https://api.themoviedb.org/3';\r\nexport const IMG_W500  = 'https://image.tmdb.org/t/p/w500';\r\nexport const IMG_ORIG  = 'https://image.tmdb.org/t/p/original';\r\n\r\n// ─── Axios instance ──────────────────────────────────────────\r\nconst api = axios.create({ baseURL: API_BASE });\r\n\r\n// Auto-attach JWT on every request\r\napi.interceptors.request.use(cfg => {\r\n  const token = localStorage.getItem('jwt_token');\r\n  if (token) cfg.headers['Authorization'] = `Bearer ${token}`;\r\n  return cfg;\r\n});\r\n\r\n// Auto-logout when JWT expires (401/403 response)\r\napi.interceptors.response.use(\r\n  res => res,\r\n  err => {\r\n    if (err.response?.status === 401 || err.response?.status === 403) {\r\n      const token = localStorage.getItem('jwt_token');\r\n      if (token) {\r\n        try {\r\n          const payload = JSON.parse(atob(token.split('.')[1]));\r\n          if (payload.exp * 1000 < Date.now()) {\r\n            localStorage.removeItem('jwt_token');\r\n            localStorage.removeItem('user_data');\r\n            window.dispatchEvent(new Event('bms_session_expired'));\r\n          }\r\n        } catch {}\r\n      }\r\n    }\r\n    return Promise.reject(err);\r\n  }\r\n);\r\n\r\n// ─── AUTH ────────────────────────────────────────────────────\r\nexport const authAPI = {\r\n  /**\r\n   * LOGIN — @RequestParam (URL params), NOT body!\r\n   * Returns: plain String JWT\r\n   */\r\n  login: (email, password) =>\r\n    api.post(`/auth/login?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`),\r\n\r\n  /**\r\n   * REGISTER — @RequestBody JSON\r\n   * phoneNumber is required (nullable=false in DB)\r\n   * Returns: plain String \"User registered successfully\"\r\n   */\r\n  register: (name, email, password, phoneNumber) =>\r\n    api.post('/auth/register', { name, email, password, phoneNumber: phoneNumber || '0000000000' }),\r\n};\r\n\r\n// ─── USERS ───────────────────────────────────────────────────\r\nexport const userAPI = {\r\n  getAll:   ()            => api.get('/users'),           // returns List<UserDto>\r\n  getById:  (id)          => api.get(`/users/${id}`),     // returns UserDto\r\n  update:   (id, data)    => api.put(`/users/${id}`, data),\r\n  delete:   (id)          => api.delete(`/users/${id}`),\r\n};\r\n\r\n// ─── MOVIES ──────────────────────────────────────────────────\r\n// MovieDto: { id, title, description, language, genre, durationMins, releaseDate, posterUrl }\r\nexport const movieAPI = {\r\n  getAll:         ()          => api.get('/movies'),\r\n  getById:        (id)        => api.get(`/movies/${id}`),\r\n  getByLanguage:  (lang)      => api.get(`/movies/language/${lang}`),\r\n  getByGenre:     (genre)     => api.get(`/movies/genre/${genre}`),\r\n  search:         (title)     => api.get(`/movies/search?title=${encodeURIComponent(title)}`),\r\n  create:         (data)      => api.post('/movies', data),      // ADMIN only\r\n  update:         (id, data)  => api.put(`/movies/${id}`, data), // ADMIN only\r\n  delete:         (id)        => api.delete(`/movies/${id}`),    // ADMIN only\r\n};\r\n\r\n// ─── SHOWS ───────────────────────────────────────────────────\r\nexport const showAPI = {\r\n  getAll:         ()                    => api.get('/shows'),\r\n  getById:        (id)                  => api.get(`/shows/${id}`),\r\n  getByMovie:     (movieId)             => api.get(`/shows/movie/${movieId}`),\r\n  getByMovieCity: (movieId, city)       => api.get(`/shows/movie/${movieId}/city/${city}`),\r\n  getByDateRange: (start, end)          => api.get(`/shows/date?start=${start}&end=${end}`),\r\n  create:         (data)                => api.post('/shows', data), // ADMIN only\r\n};\r\n\r\n// ─── THEATERS ────────────────────────────────────────────────\r\nexport const theaterAPI = {\r\n  getAll:    ()         => api.get('/theaters'),\r\n  getById:   (id)       => api.get(`/theaters/${id}`),\r\n  getByCity: (city)     => api.get(`/theaters/city/${city}`),\r\n  create:    (data)     => api.post('/theaters', data),       // ADMIN only\r\n  update:    (id, data) => api.put(`/theaters/${id}`, data),  // ADMIN only\r\n  delete:    (id)       => api.delete(`/theaters/${id}`),     // ADMIN only\r\n};\r\n\r\n// ─── BOOKINGS ─────────────────────────────────────────────────\r\nexport const bookingAPI = {\r\n  /**\r\n   * CREATE — body: { userId, showId, seatIds: Long[], paymentMethod }\r\n   * seatIds = ShowSeat.id values from show.availableSeats[].id\r\n   */\r\n  create:      (data)          => api.post('/bookings', data),\r\n  getById:     (id)            => api.get(`/bookings/${id}`),\r\n  getByNumber: (bookingNumber) => api.get(`/bookings/number/${bookingNumber}`),\r\n  getByUser:   (userId)        => api.get(`/bookings/user/${userId}`),\r\n  cancel:      (id)            => api.put(`/bookings/cancel/${id}`),\r\n};\r\n\r\n// ─── TMDB fallback ───────────────────────────────────────────\r\nconst tmdb = axios.create({ baseURL: TMDB_BASE, params: { api_key: TMDB_KEY } });\r\nexport const tmdbAPI = {\r\n  topRated:    ()   => tmdb.get('/movie/top_rated'),\r\n  popular:     ()   => tmdb.get('/movie/popular'),\r\n  upcoming:    ()   => tmdb.get('/movie/upcoming'),\r\n  getById:     (id) => tmdb.get(`/movie/${id}`),\r\n  credits:     (id) => tmdb.get(`/movie/${id}/credits`),\r\n  similar:     (id) => tmdb.get(`/movie/${id}/similar`),\r\n  recommended: (id) => tmdb.get(`/movie/${id}/recommendations`),\r\n  search:      (q)  => tmdb.get(`/search/movie?query=${encodeURIComponent(q)}`),\r\n};\r\n\r\nexport default api;
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Frontend/src/services/api.js b/Frontend/src/services/api.js
+--- a/Frontend/src/services/api.js	(revision 3b5efcf775f66429a4508d26c32a2701be3782ca)
++++ b/Frontend/src/services/api.js	(date 1771770378853)
+@@ -1,53 +1,4 @@
+-/**
+- * ============================================================
+- * API SERVICE — Mapped exactly to the Spring Boot backend code
+- * ============================================================
+- *
+- * CRITICAL BACKEND FACTS (read from actual source):
+- *
+- * ── AUTH ────────────────────────────────────────────────────
+- * POST /api/auth/login
+- *   → @RequestParam String email, @RequestParam String password
+- *   → MUST be sent as URL query params, NOT as JSON body!
+- *   → Returns: plain String JWT token  e.g. "eyJhbGci..."
+- *
+- * POST /api/auth/register
+- *   → @RequestBody RegisterRequest { name, email, password, phoneNumber, roles? }
+- *   → phoneNumber is @Column(nullable=false) — REQUIRED
+- *   → Returns: plain String "User registered successfully"
+- *
+- * JWT subject = email   (from jwtUtil.generateToken(email))
+- * JWT expiry  = 1 hour  (1000 * 60 * 60 ms)
+- * No refresh token, no /me endpoint
+- *
+- * ── MOVIES (all GETs are public, no auth needed) ─────────────
+- * MovieDto fields: id, title, description, language, genre, durationMins, releaseDate, posterUrl
+- *
+- * ── SHOWS ────────────────────────────────────────────────────
+- * ShowDto: { id, startTime (ISO), endTime (ISO),
+- *   movie: MovieDto,
+- *   screen: { id, name, totalSeats, theater: { id, name, address, city, totalScreens } },
+- *   availableSeats: [ { id, seat: { id, seatNumber, seatType, basePrice }, status, price } ]
+- * }
+- * endTime is AUTO-CALCULATED by backend (startTime + movie.durationMins)
+- *
+- * ── BOOKINGS ─────────────────────────────────────────────────
+- * POST /api/bookings
+- *   → @RequestBody { userId, showId, seatIds: Long[], paymentMethod }
+- *   → seatIds = ShowSeat IDs (the `id` from availableSeats array), NOT Seat IDs!
+- *   → Requires: USER or ADMIN role (JWT token in header)
+- *
+- * BookingDto: { id, bookingNumber, bookingTime, user, show, status, totalAmount, seats[], payment }
+- *
+- * ── USERS ────────────────────────────────────────────────────
+- * GET /api/users     → List<UserDto>  (requires USER or ADMIN auth)
+- * GET /api/users/{id} → UserDto { id, name, email, phoneNumber }
+- * No /me endpoint — use GET /api/users then filter by email from JWT
+- *
+- * ── SECURITY ─────────────────────────────────────────────────
+- * CORS: only http://localhost:3000 is whitelisted
+- * All requests with JWT need: Authorization: Bearer <token>
+- */
++
+ 
+ import axios from 'axios';
+ 
+@@ -69,7 +20,7 @@
+   return cfg;
+ });
+ 
+-// Auto-logout when JWT expires (401/403 response)
++
+ api.interceptors.response.use(
+   res => res,
+   err => {
+@@ -92,18 +43,11 @@
+ 
+ // ─── AUTH ────────────────────────────────────────────────────
+ export const authAPI = {
+-  /**
+-   * LOGIN — @RequestParam (URL params), NOT body!
+-   * Returns: plain String JWT
+-   */
++
+   login: (email, password) =>
+     api.post(`/auth/login?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`),
+ 
+-  /**
+-   * REGISTER — @RequestBody JSON
+-   * phoneNumber is required (nullable=false in DB)
+-   * Returns: plain String "User registered successfully"
+-   */
++
+   register: (name, email, password, phoneNumber) =>
+     api.post('/auth/register', { name, email, password, phoneNumber: phoneNumber || '0000000000' }),
+ };
+Index: Frontend/src/context/AuthContext.jsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';\r\nimport { authAPI, userAPI } from '../services/api';\r\n\r\nconst AuthContext = createContext();\r\n\r\n/**\r\n * HOW THE BACKEND AUTH WORKS (from reading source code):\r\n *\r\n * 1. POST /api/auth/login?email=X&password=Y  (RequestParam, NOT body)\r\n *    → Returns plain String JWT  e.g. \"eyJhbGci...\"\r\n *    → JWT subject = email\r\n *    → Expiry = 1 hour\r\n *\r\n * 2. POST /api/auth/register  { name, email, password, phoneNumber }\r\n *    → Returns plain String \"User registered successfully\"\r\n *    → Auto-login after successful register\r\n *\r\n * 3. To get user info after login:\r\n *    → Decode JWT subject (= email)\r\n *    → GET /api/users (requires auth) → find user by email\r\n *    → Store { id, name, email, phoneNumber } in localStorage\r\n *\r\n * 4. No /me endpoint, no refresh token\r\n */\r\n\r\n// Manually decode JWT payload (no library needed for this)\r\nconst decodeJwt = (token) => {\r\n  try {\r\n    const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');\r\n    return JSON.parse(atob(base64));\r\n  } catch {\r\n    return null;\r\n  }\r\n};\r\n\r\nexport const AuthProvider = ({ children }) => {\r\n  const [user, setUser]       = useState(null);\r\n  const [loading, setLoading] = useState(false);\r\n  const [error, setError]     = useState(null);\r\n\r\n  // Restore session on mount\r\n  useEffect(() => {\r\n    const token = localStorage.getItem('jwt_token');\r\n    const saved = localStorage.getItem('user_data');\r\n    if (token && saved) {\r\n      const decoded = decodeJwt(token);\r\n      // Check token not expired\r\n      if (decoded && decoded.exp * 1000 > Date.now()) {\r\n        setUser(JSON.parse(saved));\r\n      } else {\r\n        localStorage.removeItem('jwt_token');\r\n        localStorage.removeItem('user_data');\r\n      }\r\n    }\r\n\r\n    // Listen for token expiry events from axios interceptor\r\n    const handleExpired = () => {\r\n      setUser(null);\r\n      alert('Your session has expired. Please sign in again.');\r\n    };\r\n    window.addEventListener('bms_session_expired', handleExpired);\r\n    return () => window.removeEventListener('bms_session_expired', handleExpired);\r\n  }, []);\r\n\r\n  /**\r\n   * Fetch user data from backend using JWT token\r\n   * Backend has no /me endpoint, so we GET /api/users and filter by email\r\n   */\r\n  const fetchUserData = async (email) => {\r\n    try {\r\n      const res = await userAPI.getAll();\r\n      const found = res.data.find(u => u.email === email);\r\n      if (found) return found; // { id, name, email, phoneNumber }\r\n    } catch {\r\n      // If /api/users is not accessible (shouldn't happen for USER role)\r\n    }\r\n    // Fallback — store just email if user fetch fails\r\n    return { email, name: email.split('@')[0] };\r\n  };\r\n\r\n  /**\r\n   * LOGIN\r\n   * Backend: POST /api/auth/login?email=&password= (RequestParam!)\r\n   * Returns: plain String JWT\r\n   */\r\n  const login = async (email, password) => {\r\n    setLoading(true);\r\n    setError(null);\r\n    try {\r\n      const res = await authAPI.login(email, password);\r\n      // Response data is a plain string JWT\r\n      const token = typeof res.data === 'string' ? res.data.trim() : res.data?.token;\r\n      if (!token) throw new Error('No token received');\r\n\r\n      localStorage.setItem('jwt_token', token);\r\n\r\n      // Get email from JWT, then fetch full user data\r\n      const decoded = decodeJwt(token);\r\n      const userEmail = decoded?.sub || email;\r\n      const userData = await fetchUserData(userEmail);\r\n\r\n      localStorage.setItem('user_data', JSON.stringify(userData));\r\n      setUser(userData);\r\n      return { ok: true };\r\n    } catch (e) {\r\n      // Backend returns 500 for bad credentials (GlobalExceptionHandler bug)\r\n      // or 401 from Spring Security\r\n      const msg =\r\n        e.response?.data?.message ||\r\n        e.response?.data ||\r\n        (e.response?.status === 401 ? 'Invalid email or password.' : 'Login failed. Please try again.');\r\n      setError(typeof msg === 'string' ? msg : 'Login failed.');\r\n      return { ok: false };\r\n    } finally {\r\n      setLoading(false);\r\n    }\r\n  };\r\n\r\n  /**\r\n   * REGISTER\r\n   * Backend: POST /api/auth/register { name, email, password, phoneNumber }\r\n   * phoneNumber is NOT NULL in DB — required\r\n   * Returns: plain String \"User registered successfully\"\r\n   * We auto-login after success.\r\n   */\r\n  const register = async (name, email, password, phoneNumber) => {\r\n    setLoading(true);\r\n    setError(null);\r\n    try {\r\n      await authAPI.register(name, email, password, phoneNumber || '0000000000');\r\n      // Auto login after register\r\n      return await login(email, password);\r\n    } catch (e) {\r\n      const raw = e.response?.data;\r\n      const msg =\r\n        (typeof raw === 'string' ? raw : raw?.message) ||\r\n        'Registration failed.';\r\n      // Common case: \"Email already exists\" thrown as RuntimeException → 500\r\n      setError(msg.includes('Email already exists') ? 'This email is already registered.' : msg);\r\n      return { ok: false };\r\n    } finally {\r\n      setLoading(false);\r\n    }\r\n  };\r\n\r\n  const logout = useCallback(() => {\r\n    localStorage.removeItem('jwt_token');\r\n    localStorage.removeItem('user_data');\r\n    setUser(null);\r\n  }, []);\r\n\r\n  const isAdmin = user?.roles?.some(r =>\r\n    (typeof r === 'string' ? r : r?.name) === 'ADMIN'\r\n  ) || false;\r\n\r\n  return (\r\n    <AuthContext.Provider value={{ user, loading, error, setError, login, register, logout, isAdmin }}>\r\n      {children}\r\n    </AuthContext.Provider>\r\n  );\r\n};\r\n\r\nexport const useAuth = () => useContext(AuthContext);
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Frontend/src/context/AuthContext.jsx b/Frontend/src/context/AuthContext.jsx
+--- a/Frontend/src/context/AuthContext.jsx	(revision 3b5efcf775f66429a4508d26c32a2701be3782ca)
++++ b/Frontend/src/context/AuthContext.jsx	(date 1771770378779)
+@@ -3,27 +3,7 @@
+ 
+ const AuthContext = createContext();
+ 
+-/**
+- * HOW THE BACKEND AUTH WORKS (from reading source code):
+- *
+- * 1. POST /api/auth/login?email=X&password=Y  (RequestParam, NOT body)
+- *    → Returns plain String JWT  e.g. "eyJhbGci..."
+- *    → JWT subject = email
+- *    → Expiry = 1 hour
+- *
+- * 2. POST /api/auth/register  { name, email, password, phoneNumber }
+- *    → Returns plain String "User registered successfully"
+- *    → Auto-login after successful register
+- *
+- * 3. To get user info after login:
+- *    → Decode JWT subject (= email)
+- *    → GET /api/users (requires auth) → find user by email
+- *    → Store { id, name, email, phoneNumber } in localStorage
+- *
+- * 4. No /me endpoint, no refresh token
+- */
+ 
+-// Manually decode JWT payload (no library needed for this)
+ const decodeJwt = (token) => {
+   try {
+     const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+@@ -53,7 +33,7 @@
+       }
+     }
+ 
+-    // Listen for token expiry events from axios interceptor
++
+     const handleExpired = () => {
+       setUser(null);
+       alert('Your session has expired. Please sign in again.');
+@@ -62,27 +42,19 @@
+     return () => window.removeEventListener('bms_session_expired', handleExpired);
+   }, []);
+ 
+-  /**
+-   * Fetch user data from backend using JWT token
+-   * Backend has no /me endpoint, so we GET /api/users and filter by email
+-   */
++
+   const fetchUserData = async (email) => {
+     try {
+       const res = await userAPI.getAll();
+       const found = res.data.find(u => u.email === email);
+       if (found) return found; // { id, name, email, phoneNumber }
+     } catch {
+-      // If /api/users is not accessible (shouldn't happen for USER role)
+     }
+-    // Fallback — store just email if user fetch fails
++
+     return { email, name: email.split('@')[0] };
+   };
+ 
+-  /**
+-   * LOGIN
+-   * Backend: POST /api/auth/login?email=&password= (RequestParam!)
+-   * Returns: plain String JWT
+-   */
++
+   const login = async (email, password) => {
+     setLoading(true);
+     setError(null);
+@@ -103,8 +75,7 @@
+       setUser(userData);
+       return { ok: true };
+     } catch (e) {
+-      // Backend returns 500 for bad credentials (GlobalExceptionHandler bug)
+-      // or 401 from Spring Security
++
+       const msg =
+         e.response?.data?.message ||
+         e.response?.data ||
+@@ -116,13 +87,7 @@
+     }
+   };
+ 
+-  /**
+-   * REGISTER
+-   * Backend: POST /api/auth/register { name, email, password, phoneNumber }
+-   * phoneNumber is NOT NULL in DB — required
+-   * Returns: plain String "User registered successfully"
+-   * We auto-login after success.
+-   */
++
+   const register = async (name, email, password, phoneNumber) => {
+     setLoading(true);
+     setError(null);
+@@ -135,7 +100,7 @@
+       const msg =
+         (typeof raw === 'string' ? raw : raw?.message) ||
+         'Registration failed.';
+-      // Common case: "Email already exists" thrown as RuntimeException → 500
++
+       setError(msg.includes('Email already exists') ? 'This email is already registered.' : msg);
+       return { ok: false };
+     } finally {
+Index: Movie Booking System Backend/src/main/java/com/cfs/MovieBookingSystem/DataLoader.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Movie Booking System Backend/src/main/java/com/cfs/MovieBookingSystem/DataLoader.java b/Movie Booking System Backend/src/main/java/com/cfs/MovieBookingSystem/DataLoader.java
+new file mode 100644
+--- /dev/null	(date 1771780543747)
++++ b/Movie Booking System Backend/src/main/java/com/cfs/MovieBookingSystem/DataLoader.java	(date 1771780543747)
+@@ -0,0 +1,123 @@
++package com.cfs.MovieBookingSystem;
++
++import com.cfs.MovieBookingSystem.model.Movie;
++import com.cfs.MovieBookingSystem.repository.MovieRepository;
++import com.cfs.MovieBookingSystem.service.TmdbService;
++import lombok.RequiredArgsConstructor;
++import org.springframework.boot.CommandLineRunner;
++import org.springframework.stereotype.Component;
++
++import java.util.ArrayList;
++import java.util.HashSet;
++import java.util.List;
++import java.util.Map;
++import java.util.Set;
++
++@Component
++@RequiredArgsConstructor
++public class DataLoader implements CommandLineRunner {
++
++    private final MovieRepository movieRepository;
++    private final TmdbService     tmdbService;
++
++    @Override
++    public void run(String... args) {
++
++        if (movieRepository.count() > 0) {
++            System.out.println("Movies already in DB: " + movieRepository.count() + ". Skipping.");
++            return;
++        }
++
++        System.out.println("Importing movies from TMDB...");
++
++        List<Movie> toSave    = new ArrayList<>();
++        Set<String> seenTitles = new HashSet<>();
++
++        // Fetch from all 4 categories
++        List<Map<String, Object>> allResults = new ArrayList<>();
++        allResults.addAll(tmdbService.fetchNowPlaying());
++        allResults.addAll(tmdbService.fetchPopular());
++        allResults.addAll(tmdbService.fetchTopRated());
++        allResults.addAll(tmdbService.fetchUpcoming());
++
++        for (Map<String, Object> m : allResults) {
++            if (toSave.size() >= 50) break;
++
++            String title = getString(m, "title");
++            if (title == null || title.isBlank())    continue;
++            if (seenTitles.contains(title))           continue;
++            seenTitles.add(title);
++
++            String posterPath = getString(m, "poster_path");
++            if (posterPath == null)                   continue;
++            String posterUrl = "https://image.tmdb.org/t/p/w500" + posterPath;
++
++            Movie movie = new Movie();
++            movie.setTitle(title);
++            movie.setDescription(getStringOrDefault(m, "overview", "No description available."));
++            movie.setLanguage(mapLanguage(getString(m, "original_language")));
++            movie.setGenre(mapGenre(m.get("genre_ids")));
++            movie.setDurationMins(120);
++            movie.setReleaseDate(getStringOrDefault(m, "release_date", "2024-01-01"));
++            movie.setPosterUrl(posterUrl);
++
++            toSave.add(movie);
++        }
++
++        if (!toSave.isEmpty()) {
++            movieRepository.saveAll(toSave);
++            System.out.println("Imported " + toSave.size() + " movies from TMDB!");
++        } else {
++            System.out.println("No movies imported. Check TMDB_API_KEY.");
++        }
++    }
++
++    // ── Helpers ──────────────────────────────────────────────────────
++
++    private String getString(Map<String, Object> map, String key) {
++        Object val = map.get(key);
++        if (val == null) return null;
++        String s = val.toString();
++        return s.equals("null") ? null : s;
++    }
++
++    private String getStringOrDefault(Map<String, Object> map, String key, String def) {
++        String val = getString(map, key);
++        return (val == null || val.isBlank()) ? def : val;
++    }
++
++    private String mapLanguage(String lang) {
++        if (lang == null) return "English";
++        switch (lang) {
++            case "hi": return "Hindi";
++            case "ta": return "Tamil";
++            case "te": return "Telugu";
++            case "ml": return "Malayalam";
++            case "kn": return "Kannada";
++            case "ko": return "Korean";
++            case "ja": return "Japanese";
++            default:   return "English";
++        }
++    }
++
++    @SuppressWarnings("unchecked")
++    private String mapGenre(Object genreIdsObj) {
++        if (!(genreIdsObj instanceof List)) return "Drama";
++        List<Object> ids = (List<Object>) genreIdsObj;
++        if (ids.isEmpty()) return "Drama";
++        int id = ((Number) ids.get(0)).intValue();
++        switch (id) {
++            case 28:    return "Action";
++            case 35:    return "Comedy";
++            case 27:    return "Horror";
++            case 878:   return "Sci-Fi";
++            case 53:    return "Thriller";
++            case 16:    return "Animation";
++            case 18:    return "Drama";
++            case 10749: return "Romance";
++            case 12:    return "Adventure";
++            case 80:    return "Crime";
++            default:    return "Drama";
++        }
++    }
++}
+\ No newline at end of file

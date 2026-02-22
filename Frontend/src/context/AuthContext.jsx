@@ -3,27 +3,7 @@ import { authAPI, userAPI } from '../services/api';
 
 const AuthContext = createContext();
 
-/**
- * HOW THE BACKEND AUTH WORKS (from reading source code):
- *
- * 1. POST /api/auth/login?email=X&password=Y  (RequestParam, NOT body)
- *    → Returns plain String JWT  e.g. "eyJhbGci..."
- *    → JWT subject = email
- *    → Expiry = 1 hour
- *
- * 2. POST /api/auth/register  { name, email, password, phoneNumber }
- *    → Returns plain String "User registered successfully"
- *    → Auto-login after successful register
- *
- * 3. To get user info after login:
- *    → Decode JWT subject (= email)
- *    → GET /api/users (requires auth) → find user by email
- *    → Store { id, name, email, phoneNumber } in localStorage
- *
- * 4. No /me endpoint, no refresh token
- */
 
-// Manually decode JWT payload (no library needed for this)
 const decodeJwt = (token) => {
   try {
     const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
@@ -53,7 +33,7 @@ export const AuthProvider = ({ children }) => {
       }
     }
 
-    // Listen for token expiry events from axios interceptor
+
     const handleExpired = () => {
       setUser(null);
       alert('Your session has expired. Please sign in again.');
@@ -62,27 +42,19 @@ export const AuthProvider = ({ children }) => {
     return () => window.removeEventListener('bms_session_expired', handleExpired);
   }, []);
 
-  /**
-   * Fetch user data from backend using JWT token
-   * Backend has no /me endpoint, so we GET /api/users and filter by email
-   */
+
   const fetchUserData = async (email) => {
     try {
       const res = await userAPI.getAll();
       const found = res.data.find(u => u.email === email);
       if (found) return found; // { id, name, email, phoneNumber }
     } catch {
-      // If /api/users is not accessible (shouldn't happen for USER role)
     }
-    // Fallback — store just email if user fetch fails
+
     return { email, name: email.split('@')[0] };
   };
 
-  /**
-   * LOGIN
-   * Backend: POST /api/auth/login?email=&password= (RequestParam!)
-   * Returns: plain String JWT
-   */
+
   const login = async (email, password) => {
     setLoading(true);
     setError(null);
@@ -103,8 +75,7 @@ export const AuthProvider = ({ children }) => {
       setUser(userData);
       return { ok: true };
     } catch (e) {
-      // Backend returns 500 for bad credentials (GlobalExceptionHandler bug)
-      // or 401 from Spring Security
+
       const msg =
         e.response?.data?.message ||
         e.response?.data ||
@@ -116,13 +87,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  /**
-   * REGISTER
-   * Backend: POST /api/auth/register { name, email, password, phoneNumber }
-   * phoneNumber is NOT NULL in DB — required
-   * Returns: plain String "User registered successfully"
-   * We auto-login after success.
-   */
+
   const register = async (name, email, password, phoneNumber) => {
     setLoading(true);
     setError(null);
@@ -135,7 +100,7 @@ export const AuthProvider = ({ children }) => {
       const msg =
         (typeof raw === 'string' ? raw : raw?.message) ||
         'Registration failed.';
-      // Common case: "Email already exists" thrown as RuntimeException → 500
+
       setError(msg.includes('Email already exists') ? 'This email is already registered.' : msg);
       return { ok: false };
     } finally {

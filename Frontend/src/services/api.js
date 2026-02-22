@@ -1,53 +1,4 @@
-/**
- * ============================================================
- * API SERVICE — Mapped exactly to the Spring Boot backend code
- * ============================================================
- *
- * CRITICAL BACKEND FACTS (read from actual source):
- *
- * ── AUTH ────────────────────────────────────────────────────
- * POST /api/auth/login
- *   → @RequestParam String email, @RequestParam String password
- *   → MUST be sent as URL query params, NOT as JSON body!
- *   → Returns: plain String JWT token  e.g. "eyJhbGci..."
- *
- * POST /api/auth/register
- *   → @RequestBody RegisterRequest { name, email, password, phoneNumber, roles? }
- *   → phoneNumber is @Column(nullable=false) — REQUIRED
- *   → Returns: plain String "User registered successfully"
- *
- * JWT subject = email   (from jwtUtil.generateToken(email))
- * JWT expiry  = 1 hour  (1000 * 60 * 60 ms)
- * No refresh token, no /me endpoint
- *
- * ── MOVIES (all GETs are public, no auth needed) ─────────────
- * MovieDto fields: id, title, description, language, genre, durationMins, releaseDate, posterUrl
- *
- * ── SHOWS ────────────────────────────────────────────────────
- * ShowDto: { id, startTime (ISO), endTime (ISO),
- *   movie: MovieDto,
- *   screen: { id, name, totalSeats, theater: { id, name, address, city, totalScreens } },
- *   availableSeats: [ { id, seat: { id, seatNumber, seatType, basePrice }, status, price } ]
- * }
- * endTime is AUTO-CALCULATED by backend (startTime + movie.durationMins)
- *
- * ── BOOKINGS ─────────────────────────────────────────────────
- * POST /api/bookings
- *   → @RequestBody { userId, showId, seatIds: Long[], paymentMethod }
- *   → seatIds = ShowSeat IDs (the `id` from availableSeats array), NOT Seat IDs!
- *   → Requires: USER or ADMIN role (JWT token in header)
- *
- * BookingDto: { id, bookingNumber, bookingTime, user, show, status, totalAmount, seats[], payment }
- *
- * ── USERS ────────────────────────────────────────────────────
- * GET /api/users     → List<UserDto>  (requires USER or ADMIN auth)
- * GET /api/users/{id} → UserDto { id, name, email, phoneNumber }
- * No /me endpoint — use GET /api/users then filter by email from JWT
- *
- * ── SECURITY ─────────────────────────────────────────────────
- * CORS: only http://localhost:3000 is whitelisted
- * All requests with JWT need: Authorization: Bearer <token>
- */
+
 
 import axios from 'axios';
 
@@ -69,7 +20,7 @@ api.interceptors.request.use(cfg => {
   return cfg;
 });
 
-// Auto-logout when JWT expires (401/403 response)
+
 api.interceptors.response.use(
   res => res,
   err => {
@@ -92,18 +43,11 @@ api.interceptors.response.use(
 
 // ─── AUTH ────────────────────────────────────────────────────
 export const authAPI = {
-  /**
-   * LOGIN — @RequestParam (URL params), NOT body!
-   * Returns: plain String JWT
-   */
+
   login: (email, password) =>
     api.post(`/auth/login?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`),
 
-  /**
-   * REGISTER — @RequestBody JSON
-   * phoneNumber is required (nullable=false in DB)
-   * Returns: plain String "User registered successfully"
-   */
+
   register: (name, email, password, phoneNumber) =>
     api.post('/auth/register', { name, email, password, phoneNumber: phoneNumber || '0000000000' }),
 };

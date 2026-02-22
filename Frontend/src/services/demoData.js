@@ -1,8 +1,3 @@
-/**
- * Demo data — 50 movies exactly as requested.
- * All posterUrl = TMDB CDN path → https://image.tmdb.org/t/p/w500{posterUrl}
- * No API key needed. High quality w500 images.
- */
 
 export const DEMO_MOVIES = [
 
