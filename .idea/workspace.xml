@@ -4,14 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="12324220-7bf4-4c7d-8426-b3392be1f085" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Movie Booking System Backend/src/main/java/com/cfs/MovieBookingSystem/DataLoader.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Movie Booking System Backend/src/main/java/com/cfs/MovieBookingSystem/service/TmdbService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/src/context/AuthContext.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/context/AuthContext.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/src/services/api.js" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/services/api.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/src/services/demoData.js" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/services/demoData.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Movie Booking System Backend/src/main/java/com/cfs/MovieBookingSystem/MovieBookingSystemApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/Movie Booking System Backend/src/main/java/com/cfs/MovieBookingSystem/MovieBookingSystemApplication.java" afterDir="false" />
-    </list>
+    <list default="true" id="12324220-7bf4-4c7d-8426-b3392be1f085" name="Changes" comment="Initial commit" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -62,7 +55,6 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "master",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/divya/Downloads/Movie Booking System"
   }

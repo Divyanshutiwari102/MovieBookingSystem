@@ -19,7 +19,7 @@ public class Movie {
 
     @Column(nullable = false)
     private String title;
-
+    @Column(columnDefinition = "TEXT")
     private String description;
     private String language;
     private String genre;
