@@ -54,7 +54,14 @@ public class DataLoader implements CommandLineRunner {
 
             Movie movie = new Movie();
             movie.setTitle(title);
-            movie.setDescription(getStringOrDefault(m, "overview", "No description available."));
+            String desc = getStringOrDefault(m, "overview", "No description available.");
+
+                // Safety truncate to avoid MySQL strict mode issues
+                if (desc != null && desc.length() > 1000) {
+                    desc = desc.substring(0, 1000);
+                }
+                
+                movie.setDescription(desc);
             movie.setLanguage(mapLanguage(getString(m, "original_language")));
             movie.setGenre(mapGenre(m.get("genre_ids")));
             movie.setDurationMins(120);
