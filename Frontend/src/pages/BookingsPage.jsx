@@ -26,6 +26,7 @@ const BookingsPage = () => {
   const [bookings, setBookings] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('all');
+  const [cancellingId, setCancellingId] = useState(null);
 
   useEffect(() => {
     const fetchBookings = async () => {
@@ -43,6 +44,21 @@ const BookingsPage = () => {
     if (user) fetchBookings();
     else setIsLoading(false);
   }, [user]);
+
+  const handleCancel = async (bookingId) => {
+    if (!window.confirm('Cancel this booking? Seats will be released.')) return;
+    setCancellingId(bookingId);
+    try {
+      await bookingAPI.cancel(bookingId);
+      setBookings(prev => prev.map(b =>
+        b.id === bookingId ? { ...b, status: 'CANCELLED' } : b
+      ));
+    } catch {
+      alert('Could not cancel booking. Please try again.');
+    } finally {
+      setCancellingId(null);
+    }
+  };
 
   if (isLoading) return <Loader />;
 
@@ -180,13 +196,31 @@ const BookingsPage = () => {
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between px-4 pb-4">
-                    <p className="text-sm text-gray-400">
-                      Seats: <span className="text-white font-semibold">{seatLabels}</span>
-                    </p>
-                    <p className="text-xs text-gray-500">
-                      {formatDate(booking.bookingTime)}
-                    </p>
+                  <div className="flex items-center justify-between px-4 pb-4 gap-3">
+                    <div>
+                      <p className="text-sm text-gray-400">
+                        Seats: <span className="text-white font-semibold">{seatLabels}</span>
+                      </p>
+                      <p className="text-xs text-gray-600 mt-0.5">
+                        Booked: {formatDate(booking.bookingTime)}
+                      </p>
+                    </div>
+                    {isConfirmed && (
+                      <button
+                        onClick={() => handleCancel(booking.id)}
+                        disabled={cancellingId === booking.id}
+                        className="shrink-0 px-4 py-2 rounded-xl text-xs font-bold transition-all"
+                        style={{
+                          background: cancellingId === booking.id ? 'rgba(255,255,255,0.05)' : 'rgba(229,25,55,0.1)',
+                          border: '1px solid rgba(229,25,55,0.3)',
+                          color: cancellingId === booking.id ? '#6b7280' : '#f87171',
+                        }}
+                        onMouseEnter={e => { if (cancellingId !== booking.id) { e.currentTarget.style.background = 'rgba(229,25,55,0.2)'; }}}
+                        onMouseLeave={e => { e.currentTarget.style.background = cancellingId === booking.id ? 'rgba(255,255,255,0.05)' : 'rgba(229,25,55,0.1)'; }}
+                      >
+                        {cancellingId === booking.id ? 'Cancelling...' : 'Cancel Booking'}
+                      </button>
+                    )}
                   </div>
                 </div>
               );
