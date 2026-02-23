@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { BiStar, BiTime, BiCalendar, BiX, BiCheck } from 'react-icons/bi';
 import Loader from '../components/Loader/Loader';
-import SeatLayout from '../components/SeatLayout/SeatLayout';
 import { movieAPI, showAPI, bookingAPI } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import AuthModal from '../components/Modal/AuthModal';
@@ -265,7 +264,12 @@ const MoviePage = () => {
                 </div>
               ) : (
                 <>
-                  <SeatLayout showId={selectedShow?.id} onSeatsChange={setSelectedSeats} />
+                  <button
+  onClick={handleConfirmBooking}
+  className="w-full bg-red-600 text-white py-4 rounded-xl font-bold"
+>
+  Confirm Booking
+</button>
                   {selectedSeats.length > 0 && (
                     <div className="mt-6 pt-4 border-t border-white/10">
                       <div className="flex justify-between text-sm text-gray-400 mb-3">
