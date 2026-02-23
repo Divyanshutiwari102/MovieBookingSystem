@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { BiStar, BiTime, BiCalendar, BiX, BiCheck } from 'react-icons/bi';
+import {  BiTime, BiCalendar, BiX, BiCheck } from 'react-icons/bi';
 import Loader from '../components/Loader/Loader';
 import SeatLayout from '../components/Seatlayout/Seatlayout';
 import { movieAPI, showAPI, bookingAPI } from '../services/api';
