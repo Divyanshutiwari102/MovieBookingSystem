@@ -52,12 +52,16 @@ const HomePage = () => {
       if (process.env.REACT_APP_TMDB_KEY) {
         try {
           const [a, b, c] = await Promise.allSettled([
-            tmdbAPI.topRated(), tmdbAPI.popular(), tmdbAPI.upcoming(),
-          ]);
-          const all = [
-            ...(a.status === 'fulfilled' ? a.value.data.results : []),
-            ...(b.status === 'fulfilled' ? b.value.data.results : []),
-          ].filter((m, i, arr) => arr.findIndex(x => x.id === m.id) === i);
+                tmdbAPI.topRated(),
+                tmdbAPI.popular(),
+                tmdbAPI.upcoming(),
+              ]);
+
+              const all = [
+                ...(a.status === 'fulfilled' ? a.value.data.results : []),
+                ...(b.status === 'fulfilled' ? b.value.data.results : []),
+                ...(c.status === 'fulfilled' ? c.value.data.results : []),
+              ].filter((m, i, arr) => arr.findIndex(x => x.id === m.id) === i);
           if (all.length > 0) {
             const backd = all.filter(m => m.backdrop_path).slice(0, 5).map(m => ({
               ...m, description: m.overview, id: m.id,
