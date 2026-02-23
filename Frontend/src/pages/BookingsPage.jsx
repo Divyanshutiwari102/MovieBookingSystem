@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { BiTicket,  BiArrowBack, BiMovie } from 'react-icons/bi';
+import { BiCalendar, BiTime, BiArrowBack, BiMovie, BiBookmark } from 'react-icons/bi';
 import { bookingAPI } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import Loader from '../components/Loader/Loader';
@@ -77,13 +77,13 @@ const BookingsPage = () => {
 
         {!user ? (
           <div className="text-center py-20">
-            <BiTicket className="text-6xl text-gray-600 mx-auto mb-4" />
+            <BiBookmark className="text-6xl text-gray-600 mx-auto mb-4" />
             <h2 className="text-xl font-semibold text-gray-300 mb-2">Please log in to view bookings</h2>
             <Link to="/" className="text-red-500 hover:underline">Go Home</Link>
           </div>
         ) : filtered.length === 0 ? (
           <div className="text-center py-20 bg-[#1a1b2e] rounded-2xl border border-gray-700">
-            <BiTicket className="text-6xl text-gray-600 mx-auto mb-4" />
+            <BiBookmark className="text-6xl text-gray-600 mx-auto mb-4" />
             <h2 className="text-xl font-semibold text-gray-300 mb-2">No bookings yet</h2>
             <p className="text-gray-500 text-sm mb-6">Book your first movie experience!</p>
             <Link to="/" className="bg-red-600 text-white px-6 py-2.5 rounded-xl font-semibold hover:bg-red-700 transition-colors">
