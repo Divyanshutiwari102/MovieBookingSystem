@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { BiX, BiEnvelope, BiLock, BiUser, BiShow, BiHide } from 'react-icons/bi';
 import { useAuth } from '../../context/AuthContext';
 
 const AuthModal = ({ isOpen, onClose }) => {
   const { login, register, isLoading, error, setError } = useAuth();
-  const [mode, setMode] = useState('login'); // 'login' | 'register'
+  const [mode, setMode] = useState('login');
   const [showPass, setShowPass] = useState(false);
   const [form, setForm] = useState({ name: '', email: '', password: '' });
 
@@ -13,6 +12,7 @@ const AuthModal = ({ isOpen, onClose }) => {
       setForm({ name: '', email: '', password: '' });
       setError(null);
       setMode('login');
+      setShowPass(false);
     }
   }, [isOpen, setError]);
 
@@ -20,110 +20,148 @@ const AuthModal = ({ isOpen, onClose }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    let success;
-    if (mode === 'login') {
-      success = await login(form.email, form.password);
-    } else {
-      success = await register(form.name, form.email, form.password);
-    }
+    const success = mode === 'login'
+      ? await login(form.email, form.password)
+      : await register(form.name, form.email, form.password);
     if (success) onClose();
   };
 
   const handle = (field) => (e) => setForm({ ...form, [field]: e.target.value });
 
+  const inputStyle = {
+    background: 'rgba(255,255,255,0.05)',
+    border: '1px solid rgba(255,255,255,0.08)',
+  };
+  const inputFocus = (e) => { e.target.style.border = '1px solid rgba(229,25,55,0.6)'; e.target.style.outline = 'none'; };
+  const inputBlur  = (e) => { e.target.style.border = '1px solid rgba(255,255,255,0.08)'; };
+
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center">
+    <div className="fixed inset-0 z-[200] flex items-center justify-center px-4">
       {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
+      <div
+        className="absolute inset-0"
+        style={{ background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(8px)' }}
+        onClick={onClose}
+      />
 
       {/* Modal */}
-      <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 overflow-hidden">
+      <div
+        className="relative w-full max-w-sm rounded-2xl overflow-hidden"
+        style={{
+          background: '#0f1021',
+          border: '1px solid rgba(255,255,255,0.08)',
+          boxShadow: '0 30px 80px rgba(0,0,0,0.9)',
+        }}
+      >
+        {/* Close */}
+        <button
+          onClick={onClose}
+          className="absolute right-4 top-4 text-gray-500 hover:text-white transition-colors z-10 w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/5 text-lg"
+        >
+          ✕
+        </button>
+
         {/* Header */}
-        <div className="bg-[#1a1a2e] px-6 pt-8 pb-6 text-center relative">
-          <button onClick={onClose} className="absolute right-4 top-4 text-gray-400 hover:text-white transition-colors">
-            <BiX className="text-2xl" />
-          </button>
-          <div className="w-12 h-12 bg-red-600 rounded-xl flex items-center justify-center mx-auto mb-3">
-            <span className="text-white text-2xl font-bold">🎬</span>
+        <div className="px-6 pt-8 pb-6 text-center" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+          <div
+            className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4"
+            style={{
+              background: 'linear-gradient(135deg, #e51937, #c01530)',
+              boxShadow: '0 8px 24px rgba(229,25,55,0.4)',
+            }}
+          >
+            <span className="text-2xl">🎬</span>
           </div>
-          <h2 className="text-white text-2xl font-bold">
-            {mode === 'login' ? 'Welcome Back!' : 'Get Started'}
+          <h2 className="text-white text-xl font-bold">
+            {mode === 'login' ? 'Welcome Back!' : 'Create Account'}
           </h2>
-          <p className="text-gray-400 text-sm mt-1">
-            {mode === 'login' ? 'Sign in to book your tickets' : 'Create your account'}
+          <p className="text-gray-500 text-sm mt-1">
+            {mode === 'login' ? 'Sign in to book your tickets' : 'Join to start booking movies'}
           </p>
         </div>
 
-        {/* Tabs */}
-        <div className="flex border-b border-gray-200">
-          <button
-            onClick={() => { setMode('login'); setError(null); }}
-            className={`flex-1 py-3 text-sm font-semibold transition-colors ${mode === 'login' ? 'text-red-600 border-b-2 border-red-600' : 'text-gray-500 hover:text-gray-700'}`}
-          >
-            Login
-          </button>
-          <button
-            onClick={() => { setMode('register'); setError(null); }}
-            className={`flex-1 py-3 text-sm font-semibold transition-colors ${mode === 'register' ? 'text-red-600 border-b-2 border-red-600' : 'text-gray-500 hover:text-gray-700'}`}
-          >
-            Register
-          </button>
+        {/* Tab Toggle */}
+        <div className="flex mx-6 mt-5 mb-4 p-1 rounded-xl" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)' }}>
+          {['login', 'register'].map((m) => (
+            <button
+              key={m}
+              onClick={() => { setMode(m); setError(null); }}
+              className="flex-1 py-2.5 text-sm font-semibold rounded-lg transition-all"
+              style={mode === m
+                ? { background: 'linear-gradient(135deg, #e51937, #c01530)', color: '#fff', boxShadow: '0 4px 12px rgba(229,25,55,0.35)' }
+                : { color: '#6b7280' }
+              }
+            >
+              {m === 'login' ? 'Sign In' : 'Register'}
+            </button>
+          ))}
         </div>
 
         {/* Form */}
-        <div className="p-6">
+        <div className="px-6 pb-6">
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-600 text-sm px-4 py-3 rounded-lg mb-4">
+            <div className="mb-4 px-4 py-3 rounded-xl text-sm text-red-400"
+              style={{ background: 'rgba(229,25,55,0.1)', border: '1px solid rgba(229,25,55,0.2)' }}>
               {error}
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-3">
             {mode === 'register' && (
-              <div className="relative">
-                <BiUser className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg" />
-                <input
-                  type="text"
-                  placeholder="Full Name"
-                  required
-                  value={form.name}
-                  onChange={handle('name')}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-red-400 focus:ring-2 focus:ring-red-100 transition"
-                />
-              </div>
+              <input
+                type="text"
+                placeholder="Full Name *"
+                required
+                value={form.name}
+                onChange={handle('name')}
+                onFocus={inputFocus}
+                onBlur={inputBlur}
+                style={inputStyle}
+                className="w-full px-4 py-3 rounded-xl text-sm text-white placeholder-gray-600 transition-all"
+              />
             )}
 
-            <div className="relative">
-              <BiEnvelope className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg" />
-              <input
-                type="email"
-                placeholder="Email Address"
-                required
-                value={form.email}
-                onChange={handle('email')}
-                className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-red-400 focus:ring-2 focus:ring-red-100 transition"
-              />
-            </div>
+            <input
+              type="email"
+              placeholder="Email Address *"
+              required
+              value={form.email}
+              onChange={handle('email')}
+              onFocus={inputFocus}
+              onBlur={inputBlur}
+              style={inputStyle}
+              className="w-full px-4 py-3 rounded-xl text-sm text-white placeholder-gray-600 transition-all"
+            />
 
             <div className="relative">
-              <BiLock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg" />
               <input
                 type={showPass ? 'text' : 'password'}
-                placeholder="Password"
+                placeholder="Password *"
                 required
                 value={form.password}
                 onChange={handle('password')}
-                className="w-full pl-10 pr-10 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-red-400 focus:ring-2 focus:ring-red-100 transition"
+                onFocus={inputFocus}
+                onBlur={inputBlur}
+                style={inputStyle}
+                className="w-full px-4 py-3 pr-12 rounded-xl text-sm text-white placeholder-gray-600 transition-all"
               />
-              <button type="button" onClick={() => setShowPass(!showPass)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
-                {showPass ? <BiHide /> : <BiShow />}
+              <button
+                type="button"
+                onClick={() => setShowPass(!showPass)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300 text-sm"
+              >
+                {showPass ? '🙈' : '👁️'}
               </button>
             </div>
 
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-red-600 hover:bg-red-700 disabled:bg-gray-300 text-white py-3 rounded-xl font-semibold text-sm transition-colors"
+              className="w-full py-3 rounded-xl font-bold text-white text-sm transition-all mt-1"
+              style={{
+                background: isLoading ? 'rgba(255,255,255,0.08)' : 'linear-gradient(135deg, #e51937, #c01530)',
+                boxShadow: isLoading ? 'none' : '0 4px 16px rgba(229,25,55,0.4)',
+              }}
             >
               {isLoading ? (
                 <span className="flex items-center justify-center gap-2">
@@ -137,11 +175,11 @@ const AuthModal = ({ isOpen, onClose }) => {
             </button>
           </form>
 
-          <p className="text-center text-xs text-gray-500 mt-4">
+          <p className="text-center text-xs text-gray-600 mt-4">
             By continuing, you agree to our{' '}
-            <a href="/terms" className="text-red-600 hover:underline">Terms of Service</a>{' '}
-            and{' '}
-            <a href="/privacy" className="text-red-600 hover:underline">Privacy Policy</a>
+            <span className="text-red-500 cursor-pointer hover:underline">Terms</span>
+            {' '}&amp;{' '}
+            <span className="text-red-500 cursor-pointer hover:underline">Privacy Policy</span>
           </p>
         </div>
       </div>
