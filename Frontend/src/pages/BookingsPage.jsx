@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import {  BiTicket,BiCalendar, BiTime, BiArrowBack, BiHome, BiCameraMovie } from 'react-icons/bi';
+import { BiCalendar, BiTime, BiArrowBack, BiHome, BiCameraMovie } from 'react-icons/bi';
 import { bookingAPI } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import Loader from '../components/Loader/Loader';
@@ -110,7 +110,7 @@ const BookingsPage = () => {
       <div className="max-w-3xl mx-auto px-4 py-6">
         {!user ? (
           <div className="text-center py-20">
-            <BiTicket className="text-6xl text-gray-600 mx-auto mb-4" />
+            <BiCameraMovie className="text-6xl text-gray-600 mx-auto mb-4" />
             <h2 className="text-xl font-semibold text-gray-400 mb-2">Please log in to view bookings</h2>
             <Link to="/" className="text-red-500 hover:underline">Go Home</Link>
           </div>
