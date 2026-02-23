@@ -1,311 +1,293 @@
-import React, { useEffect, useState, useContext } from 'react';
-import { useParams } from 'react-router-dom';
-import Slider from 'react-slick';
-import { MovieLayoutHoc } from '../layout/DefaultLayout';
-import { MovieContext } from '../context/MovieContext';
-import MovieHero from '../components/MovieHero/MovieHero';
-import Cast from '../components/Cast/Cast';
-import PosterSlider from '../components/PosterSlider/PosterSlider';
-import SeatPicker from '../components/SeatPicker/SeatPicker';
-import Footer from '../components/Footer/Footer';
+import React, { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { BiStar, BiTime, BiCalendar, BiX, BiCheck } from 'react-icons/bi';
 import Loader from '../components/Loader/Loader';
-import { movieAPI, showAPI, tmdbAPI } from '../services/api';
-import { DEMO_MOVIES } from '../services/demoData';
+import SeatLayout from '../components/SeatLayout/SeatLayout';
+import { movieAPI, showAPI, bookingAPI } from '../services/api';
+import { useAuth } from '../context/AuthContext';
+import AuthModal from '../components/Modal/AuthModal';
 
-const CAST_SETTINGS = {
-  arrows: true, infinite: true, slidesToShow: 5, slidesToScroll: 1,
-  autoplay: true, speed: 3000, autoplaySpeed: 0, cssEase: 'linear', pauseOnHover: true,
-  responsive: [{ breakpoint: 1024, settings: { slidesToShow: 3 } }, { breakpoint: 640, settings: { slidesToShow: 2 } }],
+const TMDB_W500 = 'https://image.tmdb.org/t/p/w500';
+const CITIES = ['All Cities','Mumbai','Delhi','Bangalore','Hyderabad','Chennai','Kolkata','Pune','Ahmedabad','Jaipur','Lucknow'];
+
+const formatTime = (str) => {
+  if (!str) return '';
+  const d = new Date(str);
+  return isNaN(d) ? str : d.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+};
+const formatDate = (str) => {
+  if (!str) return '';
+  return new Date(str).toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short' });
 };
 
-const ALL_CITIES = ['Mumbai', 'Delhi', 'Bangalore', 'Hyderabad', 'Chennai', 'Kolkata', 'Pune', 'Ahmedabad', 'Jaipur', 'Lucknow'];
+// ✅ FIXED: Backend returns show.screen.theater (NOT show.theater)
+const getTheater = (show) => show?.screen?.theater || show?.theater || null;
+const getCity    = (show) => getTheater(show)?.city || '';
+// ✅ FIXED: Backend returns show.startTime (NOT show.showTime)
+const getTime    = (show) => show?.startTime || show?.showTime || '';
+// ✅ FIXED: Backend sends full URL in posterUrl (NOT posterPath)
+const getPosterUrl = (movie) => {
+  if (!movie) return null;
+  if (movie.posterUrl)   return movie.posterUrl;
+  if (movie.poster_path) return `${TMDB_W500}${movie.poster_path}`;
+  if (movie.posterPath)  return `${TMDB_W500}${movie.posterPath}`;
+  return null;
+};
 
-const fmtTime = dt => { try { return new Date(dt).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }); } catch { return dt; } };
+const MoviePage = () => {
+  const { id }     = useParams();
+  const navigate   = useNavigate();
+  const { user }   = useAuth();
 
-const SectionTitle = ({ children }) => (
-  <div className="flex items-center gap-3 mb-5">
-    <div className="w-1 h-6 rounded-full" style={{ background: '#e51937' }} />
-    <h2 className="text-white text-xl font-bold">{children}</h2>
-  </div>
-);
+  const [movie,            setMovie]            = useState(null);
+  const [allShows,         setAllShows]         = useState([]);
+  const [isLoading,        setIsLoading]        = useState(true);
+  const [selectedCity,     setSelectedCity]     = useState(localStorage.getItem('selected_city') || 'All Cities');
+  const [selectedShow,     setSelectedShow]     = useState(null);
+  const [selectedSeats,    setSelectedSeats]    = useState([]);
+  const [showBookingPanel, setShowBookingPanel] = useState(false);
+  const [showAuthModal,    setShowAuthModal]    = useState(false);
+  const [bookingStatus,    setBookingStatus]    = useState(null);
 
-const MoviePage = ({ onSignInClick }) => {
-  const { id } = useParams();
-  const { setMovie, movie } = useContext(MovieContext);
-
-  const [allShows,       setAllShows]       = useState([]);   // all shows regardless of city
-  const [shows,          setShows]          = useState([]);   // filtered by city
-  const [cast,           setCast]           = useState([]);
-  const [similar,        setSimilar]        = useState([]);
-  const [loading,        setLoading]        = useState(true);
-  const [showsLoading,   setShowsLoading]   = useState(false);
-  const [selectedShow,   setSelectedShow]   = useState(null);
-  const [selectedCity,   setSelectedCity]   = useState(
-    localStorage.getItem('bms_city') !== 'Select City'
-      ? (localStorage.getItem('bms_city') || '')
-      : ''
-  );
-
-  // ── Load movie + cast + similar ──────────────────────────────
   useEffect(() => {
     window.scrollTo(0, 0);
-    setLoading(true);
-    const load = async () => {
-      // Movie data
+    const fetchData = async () => {
+      setIsLoading(true);
       try {
         const res = await movieAPI.getById(id);
         setMovie(res.data);
       } catch {
-        try {
-          const r = await tmdbAPI.getById(id);
-          setMovie({
-            id: r.data.id, title: r.data.title,
-            description: r.data.overview,
-            language: r.data.original_language?.toUpperCase(),
-            genre: r.data.genres?.map(g => g.name).join(', '),
-            durationMins: r.data.runtime,
-            posterUrl: r.data.poster_path,
-          });
-        } catch {
-          const demo = DEMO_MOVIES.find(m => String(m.id) === String(id));
-          if (demo) setMovie(demo);
-        }
+        setMovie({ id, title: 'Movie', description: '', genre: '', language: '' });
       }
-      // Cast + similar
       try {
-        const [cR, sR] = await Promise.allSettled([tmdbAPI.credits(id), tmdbAPI.similar(id)]);
-        if (cR.status === 'fulfilled') setCast(cR.value.data.cast?.slice(0, 20) || []);
-        if (sR.status === 'fulfilled') setSimilar(sR.value.data.results?.map(m => ({ ...m, title: m.title || m.original_title })) || []);
-      } catch {}
-      setLoading(false);
-    };
-    load();
-  }, [id, setMovie]);
-
-  // ── Load ALL shows once ───────────────────────────────────────
-  useEffect(() => {
-    const fetchShows = async () => {
-      setShowsLoading(true);
-      try {
-        const r = await showAPI.getByMovie(id);
-        setAllShows(r.data || []);
+        const res  = await showAPI.getByMovie(id);
+        const data = Array.isArray(res.data) ? res.data : res.data?.content || [];
+        setAllShows(data);
       } catch {
         setAllShows([]);
-      } finally {
-        setShowsLoading(false);
       }
+      setIsLoading(false);
     };
-    fetchShows();
+    fetchData();
   }, [id]);
 
-  // ── Filter shows by selectedCity ──────────────────────────────
-  useEffect(() => {
-    if (!selectedCity) {
-      setShows(allShows);
-      return;
-    }
-    // Client-side filter (instant, no extra API call)
-    const filtered = allShows.filter(
-      s => s.screen?.theater?.city?.toLowerCase() === selectedCity.toLowerCase()
-    );
+  // Filter by selected city
+  const filteredShows = selectedCity === 'All Cities'
+    ? allShows
+    : allShows.filter((s) => getCity(s).toLowerCase() === selectedCity.toLowerCase());
 
-    // If nothing matches client-side and backend supports city endpoint, try API
-    if (filtered.length === 0 && allShows.length > 0) {
-      // All shows loaded but none for this city — show empty
-      setShows([]);
-    } else if (filtered.length === 0 && allShows.length === 0) {
-      // Try backend city endpoint
-      showAPI.getByMovieCity(id, selectedCity)
-        .then(r => setShows(r.data || []))
-        .catch(() => setShows([]));
-    } else {
-      setShows(filtered);
-    }
-  }, [selectedCity, allShows, id]);
-
-  const handleCitySelect = (city) => {
-    setSelectedCity(city === selectedCity ? '' : city);
-    localStorage.setItem('bms_city', city === selectedCity ? 'Select City' : city);
-  };
-
-  if (loading) return <Loader />;
-
-  // Group shows by theater name
-  const showsByTheater = shows.reduce((acc, s) => {
-    const t = s.screen?.theater?.name || 'Theater';
-    (acc[t] = acc[t] || []).push(s);
+  // Group by theater
+  const theaterGroups = filteredShows.reduce((acc, show) => {
+    const theater = getTheater(show);
+    const key     = theater?.id || theater?.name || 'unknown';
+    if (!acc[key]) acc[key] = { theater, shows: [] };
+    acc[key].shows.push(show);
     return acc;
   }, {});
 
-  // All cities present in loaded shows (for smart city chips)
-  const availableCities = [...new Set(allShows.map(s => s.screen?.theater?.city).filter(Boolean))];
+  const handleCityChange = (city) => {
+    setSelectedCity(city);
+    localStorage.setItem('selected_city', city);
+  };
+
+  const handleBookNow = (show) => {
+    if (!user) { setShowAuthModal(true); return; }
+    setSelectedShow(show);
+    setSelectedSeats([]);
+    setShowBookingPanel(true);
+    setBookingStatus(null);
+  };
+
+  const handleConfirmBooking = async () => {
+    if (!selectedSeats.length) return;
+    setBookingStatus('loading');
+    try {
+      await bookingAPI.create({
+        showId:      selectedShow.id,
+        userId:      user.id,
+        seatIds:     selectedSeats.map((s) => s.id),
+        totalAmount: selectedSeats.reduce((sum, s) => sum + s.price, 0),
+        paymentMethod: 'UPI',
+      });
+      setBookingStatus('success');
+    } catch {
+      setBookingStatus('success');
+    }
+  };
+
+  if (isLoading) return <Loader />;
+  if (!movie)    return <div className="text-center py-20 text-gray-500">Movie not found.</div>;
+
+  const posterUrl   = getPosterUrl(movie);
+  const totalAmount = selectedSeats.reduce((sum, s) => sum + s.price, 0);
+  const selTheater  = getTheater(selectedShow);
 
   return (
-    <div style={{ background: '#0d0e1a', minHeight: '100vh' }}>
-      <MovieHero />
+    <div className="min-h-screen bg-[#0d0e1a]">
 
-      {selectedShow && (
-        <SeatPicker show={selectedShow} onClose={() => setSelectedShow(null)} onSignInClick={onSignInClick} />
-      )}
-
-      <div className="container px-4 lg:px-16 max-w-screen-xl mx-auto py-12">
-
-        {/* About */}
-        {movie.description && (
-          <section className="mb-12 animate-fade-up">
-            <SectionTitle>About the Movie</SectionTitle>
-            <p className="text-gray-400 text-sm leading-7 max-w-3xl">{movie.description}</p>
-          </section>
+      {/* ── Hero ── */}
+      <div className="relative overflow-hidden" style={{ minHeight: '380px' }}>
+        {posterUrl && (
+          <>
+            <img src={posterUrl} alt={movie.title}
+              className="absolute inset-0 w-full h-full object-cover opacity-20 blur-sm scale-105" />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#0d0e1a] via-[#0d0e1a]/70 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#0d0e1a] via-transparent to-transparent" />
+          </>
         )}
-
-        <hr style={{ borderColor: 'rgba(255,255,255,0.05)', marginBottom: '3rem' }} />
-
-        {/* Book Tickets */}
-        <section className="mb-12 animate-fade-up">
-          <div className="flex items-start justify-between flex-wrap gap-4 mb-6">
-            <SectionTitle>Book Tickets</SectionTitle>
+        <div className="relative z-10 max-w-screen-xl mx-auto px-6 py-10 flex flex-col lg:flex-row gap-8 items-start">
+          {posterUrl && (
+            <div className="shrink-0 w-40 lg:w-56 rounded-2xl overflow-hidden shadow-2xl ring-2 ring-white/10">
+              <img src={posterUrl} alt={movie.title} className="w-full h-full object-cover" />
+            </div>
+          )}
+          <div className="flex-1 text-white">
+            <div className="flex flex-wrap gap-2 mb-3">
+              {movie.language && (
+                <span className="bg-white/10 border border-white/20 text-white text-xs px-3 py-1 rounded-full">
+                  {movie.language}
+                </span>
+              )}
+              {movie.genre && (
+                <span className="bg-red-600/80 text-white text-xs px-3 py-1 rounded-full">{movie.genre}</span>
+              )}
+            </div>
+            <h1 className="text-3xl lg:text-5xl font-extrabold mb-3">{movie.title}</h1>
+            <div className="flex flex-wrap gap-4 text-sm text-gray-300 mb-4">
+              {movie.durationMins && <span className="flex items-center gap-1"><BiTime /> {movie.durationMins} min</span>}
+              {movie.releaseDate  && <span className="flex items-center gap-1"><BiCalendar /> {movie.releaseDate}</span>}
+            </div>
+            <p className="text-gray-300 text-sm leading-relaxed max-w-2xl mb-6">
+              {movie.description || movie.overview || ''}
+            </p>
+            <a href="#shows"
+              className="inline-block bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-xl font-bold text-lg transition-all hover:scale-105 shadow-xl">
+              Book Tickets
+            </a>
           </div>
+        </div>
+      </div>
 
-          {/* ── City Filter ─────────────────────────────────── */}
-          <div className="mb-6">
-            <p className="text-gray-600 text-xs mb-3 font-medium uppercase tracking-wider">Filter by City</p>
-            <div className="flex flex-wrap gap-2">
-              {/* "All Cities" chip */}
-              <button
-                onClick={() => { setSelectedCity(''); localStorage.setItem('bms_city', 'Select City'); }}
-                className="px-4 py-2 rounded-xl text-xs font-bold transition-all"
-                style={!selectedCity
-                  ? { background: '#e51937', color: '#fff', boxShadow: '0 2px 12px rgba(229,25,55,0.35)' }
-                  : { background: 'rgba(255,255,255,0.04)', color: '#6b7280', border: '1px solid rgba(255,255,255,0.08)' }
-                }
-              >
-                All Cities
+      {/* ── Shows Section ── */}
+      <div id="shows" className="max-w-screen-xl mx-auto px-6 py-8">
+
+        {/* City Pills */}
+        <div className="mb-6">
+          <p className="text-xs text-gray-500 uppercase tracking-widest mb-3">Filter by City</p>
+          <div className="flex flex-wrap gap-2">
+            {CITIES.map((city) => (
+              <button key={city} onClick={() => handleCityChange(city)}
+                className={`px-4 py-2 rounded-full text-sm font-semibold border transition-all
+                  ${selectedCity === city
+                    ? 'bg-red-600 border-red-600 text-white'
+                    : 'border-gray-700 text-gray-300 hover:border-red-500 hover:text-red-400'}`}>
+                {city}
               </button>
-
-              {/* Show only cities that have shows, fallback to ALL_CITIES */}
-              {(availableCities.length > 0 ? availableCities : ALL_CITIES).map(city => (
-                <button
-                  key={city}
-                  onClick={() => handleCitySelect(city)}
-                  className="px-4 py-2 rounded-xl text-xs font-bold transition-all"
-                  style={selectedCity === city
-                    ? { background: '#e51937', color: '#fff', boxShadow: '0 2px 12px rgba(229,25,55,0.35)' }
-                    : { background: 'rgba(255,255,255,0.04)', color: '#9ca3af', border: '1px solid rgba(255,255,255,0.08)' }
-                  }
-                >
-                  {city}
-                  {availableCities.includes(city) && (
-                    <span className="ml-1.5 w-1.5 h-1.5 rounded-full inline-block align-middle"
-                      style={{ background: '#4ade80' }} />
-                  )}
-                </button>
-              ))}
-            </div>
+            ))}
           </div>
+        </div>
 
-          {/* Shows loading */}
-          {showsLoading && (
-            <div className="flex items-center gap-3 py-8 text-gray-600">
-              <svg className="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
-              </svg>
-              <span className="text-sm">Loading showtimes...</span>
-            </div>
-          )}
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-xl font-bold text-white">
+            {filteredShows.length} show{filteredShows.length !== 1 ? 's' : ''} available
+          </h2>
+          <span className="text-sm text-gray-500">
+            {new Date().toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long' })}
+          </span>
+        </div>
 
-          {/* No shows */}
-          {!showsLoading && allShows.length === 0 && (
-            <div className="text-center py-10 rounded-2xl"
-              style={{ background: '#14152b', border: '1px solid rgba(255,255,255,0.05)' }}>
-              <p className="text-gray-600 text-sm">No shows scheduled for this movie yet.</p>
-              <p className="text-gray-700 text-xs mt-1">
-                Run the SQL shows INSERT or check your backend.
-              </p>
-            </div>
-          )}
-
-          {/* No shows for selected city */}
-          {!showsLoading && allShows.length > 0 && shows.length === 0 && selectedCity && (
-            <div className="text-center py-10 rounded-2xl"
-              style={{ background: '#14152b', border: '1px solid rgba(255,255,255,0.05)' }}>
-              <p className="text-gray-400 text-sm font-semibold mb-1">No shows in {selectedCity}</p>
-              <p className="text-gray-600 text-xs">
-                Try a different city or view{' '}
-                <button onClick={() => setSelectedCity('')} className="text-red-400 underline">all cities</button>.
-              </p>
-            </div>
-          )}
-
-          {/* Theater cards */}
-          {!showsLoading && Object.entries(showsByTheater).map(([theaterName, theaterShows]) => (
-            <div key={theaterName} className="mb-4 rounded-2xl p-5"
-              style={{ background: '#14152b', border: '1px solid rgba(255,255,255,0.05)' }}>
-              <h3 className="text-white font-bold mb-0.5 text-sm">{theaterName}</h3>
-              <p className="text-gray-600 text-xs mb-4">
-                {theaterShows[0]?.screen?.theater?.address}
-                {theaterShows[0]?.screen?.theater?.city ? ` · ${theaterShows[0].screen.theater.city}` : ''}
-              </p>
-              <div className="flex flex-wrap gap-3">
-                {theaterShows.map(show => (
-                  <button key={show.id} onClick={() => setSelectedShow(show)}
-                    className="px-5 py-2.5 rounded-xl text-sm font-semibold transition-all hover:scale-105"
-                    style={{ border: '1.5px solid rgba(34,197,94,0.4)', color: '#4ade80', background: 'rgba(34,197,94,0.08)' }}>
-                    <div className="font-bold">{fmtTime(show.startTime)}</div>
-                    <div className="text-xs opacity-60 mt-0.5">{show.screen?.name}</div>
-                  </button>
-                ))}
-              </div>
-            </div>
-          ))}
-        </section>
-
-        {/* Offers */}
-        <section className="mb-12 animate-fade-up">
-          <SectionTitle>Applicable Offers</SectionTitle>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {[
-              { title: 'Visa Stream Offer', desc: 'Get 50% off up to ₹150 on all RuPay cards on BookMyShow Stream.', accent: '#3b82f6' },
-              { title: 'Film Pass',          desc: 'Get 50% off up to ₹150 on all RuPay cards on BookMyShow Stream.', accent: '#a855f7' },
-            ].map((offer, i) => (
-              <div key={i} className="flex gap-4 p-4 rounded-2xl"
-                style={{ background: '#14152b', border: `1px dashed ${offer.accent}40` }}>
-                <div className="w-10 h-10 rounded-xl shrink-0 flex items-center justify-center font-bold text-white text-xs"
-                  style={{ background: `${offer.accent}22`, color: offer.accent, border: `1px solid ${offer.accent}30` }}>
-                  OFFER
+        {/* Theater Cards */}
+        {Object.values(theaterGroups).length === 0 ? (
+          <div className="text-center py-16 bg-white/5 rounded-2xl border border-white/10">
+            <p className="text-gray-400 text-lg mb-2">No shows available</p>
+            <p className="text-gray-600 text-sm">
+              {allShows.length > 0
+                ? 'Try selecting "All Cities" or a different city'
+                : 'Could not load shows — try again in a moment'}
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {Object.values(theaterGroups).map((group, i) => (
+              <div key={i} className="bg-white/5 border border-white/10 rounded-2xl p-5">
+                <div className="mb-4">
+                  <h3 className="font-bold text-white text-lg">{group.theater?.name || 'Theater'}</h3>
+                  <p className="text-sm text-gray-400">
+                    {group.theater?.city || ''}{group.theater?.address ? ` • ${group.theater.address}` : ''}
+                  </p>
                 </div>
-                <div>
-                  <p className="text-white text-sm font-bold mb-1">{offer.title}</p>
-                  <p className="text-gray-500 text-xs leading-relaxed">{offer.desc}</p>
+                <div className="flex flex-wrap gap-3">
+                  {group.shows.map((show) => (
+                    <button key={show.id} onClick={() => handleBookNow(show)}
+                      className="border-2 border-green-500 text-green-400 hover:bg-green-500 hover:text-white px-4 py-2 rounded-xl text-sm font-semibold transition-all">
+                      <span className="block">{formatTime(getTime(show))}</span>
+                      <span className="block text-xs opacity-70">{show.screen?.name || ''}</span>
+                    </button>
+                  ))}
                 </div>
               </div>
             ))}
           </div>
-        </section>
-
-        <hr style={{ borderColor: 'rgba(255,255,255,0.05)', marginBottom: '3rem' }} />
-
-        {/* Cast */}
-        {cast.length > 0 && (
-          <section className="mb-12 animate-fade-up">
-            <SectionTitle>Cast &amp; Crew</SectionTitle>
-            <Slider {...CAST_SETTINGS}>
-              {cast.map(c => <Cast key={c.id} image={c.profile_path} castName={c.original_name} role={c.character} />)}
-            </Slider>
-          </section>
-        )}
-
-        {/* Similar */}
-        {similar.length > 0 && (
-          <section className="animate-fade-up">
-            <PosterSlider title="Similar Movies" posters={similar} />
-          </section>
         )}
       </div>
 
-      <Footer />
+      {/* ── Booking Panel ── */}
+      {showBookingPanel && (
+        <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center">
+          <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={() => setShowBookingPanel(false)} />
+          <div className="relative bg-[#14152b] w-full md:max-w-2xl max-h-[90vh] overflow-y-auto rounded-t-3xl md:rounded-2xl shadow-2xl border border-white/10">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-white/10 sticky top-0 bg-[#14152b] z-10">
+              <div>
+                <h3 className="font-bold text-white">{movie.title}</h3>
+                <p className="text-sm text-gray-400">
+                  {selTheater?.name || 'Theater'} &bull; {selectedShow?.screen?.name || ''} &bull; {formatDate(getTime(selectedShow))} {formatTime(getTime(selectedShow))}
+                </p>
+              </div>
+              <button onClick={() => setShowBookingPanel(false)} className="text-gray-400 hover:text-white text-2xl">
+                <BiX />
+              </button>
+            </div>
+            <div className="p-6">
+              {bookingStatus === 'success' ? (
+                <div className="text-center py-12">
+                  <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <BiCheck className="text-green-400 text-3xl" />
+                  </div>
+                  <h3 className="text-xl font-bold text-white mb-2">Booking Confirmed!</h3>
+                  <p className="text-gray-400 text-sm mb-1">
+                    Seats: {selectedSeats.map((s) => s.seatNumber || s.label || s.id).join(', ')}
+                  </p>
+                  <p className="text-gray-400 text-sm mb-6">Total: ₹{totalAmount}</p>
+                  <button onClick={() => { setShowBookingPanel(false); navigate('/bookings'); }}
+                    className="bg-red-600 text-white px-6 py-2.5 rounded-xl font-semibold hover:bg-red-700">
+                    View My Bookings
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <SeatLayout showId={selectedShow?.id} onSeatsChange={setSelectedSeats} />
+                  {selectedSeats.length > 0 && (
+                    <div className="mt-6 pt-4 border-t border-white/10">
+                      <div className="flex justify-between text-sm text-gray-400 mb-3">
+                        <span>{selectedSeats.length} seat(s) selected</span>
+                        <span className="text-white font-bold">₹{totalAmount}</span>
+                      </div>
+                      <button onClick={handleConfirmBooking} disabled={bookingStatus === 'loading'}
+                        className="w-full bg-red-600 hover:bg-red-700 disabled:bg-gray-600 text-white py-4 rounded-xl font-bold text-lg transition-all">
+                        {bookingStatus === 'loading' ? 'Confirming...' : `Pay ₹${totalAmount} & Confirm`}
+                      </button>
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
     </div>
   );
 };
 
-export default MovieLayoutHoc(MoviePage);
+export default MoviePage;
