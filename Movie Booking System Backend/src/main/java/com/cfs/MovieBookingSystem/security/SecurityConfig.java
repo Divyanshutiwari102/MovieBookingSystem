@@ -30,41 +30,23 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
-                .cors(cors -> {}) // enable cors
+                .cors(cors -> {})
                 .csrf(csrf -> csrf.disable())
 
                 .authorizeHttpRequests(auth -> auth
-
-                        // 🔥 IMPORTANT (preflight allow)
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-
-                        // PUBLIC
                         .requestMatchers("/api/auth/**").permitAll()
-
-                        // MOVIES
                         .requestMatchers(HttpMethod.POST, "/api/movies/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/movies/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/movies/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/movies/**").permitAll()
-
-                        // BOOKINGS
                         .requestMatchers("/api/bookings/**").hasAnyRole("USER", "ADMIN")
-
-                        // USERS
                         .requestMatchers("/api/users/**").hasAnyRole("USER", "ADMIN")
-
-                        // THEATERS
-                        .requestMatchers(HttpMethod.POST, "/api/theaters/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/api/theaters/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/api/theaters/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/theaters/**").permitAll()
-
-                        // SHOWS
+                        .requestMatchers(HttpMethod.GET, "/api/shows/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/shows/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/shows/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/shows/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/api/shows/**").permitAll()
-
                         .anyRequest().authenticated()
                 )
 
@@ -78,20 +60,18 @@ public class SecurityConfig {
         return http.build();
     }
 
-    // 🔥 ONLY ONE CORS CONFIG HERE
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
 
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOriginPatterns(List.of("http://localhost:3000","https://*.vercel.app"));
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        // ✅ Sab origins allow — localhost + Vercel + Railway
+        configuration.setAllowedOriginPatterns(List.of("*"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
 
-        UrlBasedCorsConfigurationSource source =
-                new UrlBasedCorsConfigurationSource();
-
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
 
         return source;
