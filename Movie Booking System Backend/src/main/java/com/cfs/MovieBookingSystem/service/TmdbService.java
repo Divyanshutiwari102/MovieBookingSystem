@@ -14,11 +14,11 @@ import java.util.Map;
 @Service
 public class TmdbService {
 
-    @Value("${tmdb.api.key}")
+    // ✅ Default empty — local build fail nahi hoga
+    @Value("${tmdb.api.key:}")
     private String apiKey;
 
     private static final String BASE = "https://api.themoviedb.org/3";
-
     private final RestTemplate restTemplate;
 
     public TmdbService(RestTemplate restTemplate) {
@@ -28,34 +28,35 @@ public class TmdbService {
     public List<Map<String, Object>> fetchNowPlaying() {
         return fetchResults(BASE + "/movie/now_playing?api_key=" + apiKey + "&language=en-US&page=1");
     }
-
     public List<Map<String, Object>> fetchPopular() {
         return fetchResults(BASE + "/movie/popular?api_key=" + apiKey + "&language=en-US&page=1");
     }
-
     public List<Map<String, Object>> fetchTopRated() {
         return fetchResults(BASE + "/movie/top_rated?api_key=" + apiKey + "&language=en-US&page=1");
     }
-
     public List<Map<String, Object>> fetchUpcoming() {
         return fetchResults(BASE + "/movie/upcoming?api_key=" + apiKey + "&language=en-US&page=1");
+    }
+    public String getImageUrl(String posterPath) {
+        if (posterPath == null || posterPath.equals("null") || posterPath.isBlank()) return null;
+        return "https://image.tmdb.org/t/p/w500" + posterPath;
     }
 
     @SuppressWarnings("unchecked")
     private List<Map<String, Object>> fetchResults(String url) {
+        if (apiKey == null || apiKey.isBlank()) {
+            System.out.println("TMDB API key not set — skipping.");
+            return new ArrayList<>();
+        }
         try {
             ResponseEntity<Map<String, Object>> response = restTemplate.exchange(
-                    url,
-                    HttpMethod.GET,
-                    null,
-                    new ParameterizedTypeReference<Map<String, Object>>() {}
+                url, HttpMethod.GET, null,
+                new ParameterizedTypeReference<Map<String, Object>>() {}
             );
             Map<String, Object> body = response.getBody();
             if (body == null) return new ArrayList<>();
             Object results = body.get("results");
-            if (results instanceof List) {
-                return (List<Map<String, Object>>) results;
-            }
+            if (results instanceof List) return (List<Map<String, Object>>) results;
         } catch (Exception e) {
             System.out.println("TMDB fetch failed: " + e.getMessage());
         }
