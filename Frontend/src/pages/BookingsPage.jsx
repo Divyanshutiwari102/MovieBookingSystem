@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import {  BiCalendar, BiTime, BiArrowBack, BiHome, BiCameraMovie } from 'react-icons/bi';
+import {  BiTicket,BiCalendar, BiTime, BiArrowBack, BiHome, BiCameraMovie } from 'react-icons/bi';
 import { bookingAPI } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import Loader from '../components/Loader/Loader';
