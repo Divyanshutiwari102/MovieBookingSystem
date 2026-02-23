@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import {  BiTime, BiCalendar, BiX, BiCheck } from 'react-icons/bi';
+import { BiTime, BiCalendar, BiX, BiCheck } from 'react-icons/bi';
 import Loader from '../components/Loader/Loader';
 import SeatLayout from '../components/Seatlayout/Seatlayout';
 import { movieAPI, showAPI, bookingAPI } from '../services/api';
@@ -84,11 +84,12 @@ const MoviePage = () => {
         showId: selectedShow.id,
         userId: user.id,
         seatIds: selectedSeats.map((s) => s.id),
-        totalAmount: selectedSeats.reduce((sum, s) => sum + s.price, 0),
+        paymentMethod: 'CARD',
       });
       setBookingStatus('success');
-    } catch {
-      setBookingStatus('success'); // demo mode
+    } catch (err) {
+      console.error('Booking failed:', err?.response?.data || err.message);
+      setBookingStatus('error');
     }
   };
 
@@ -248,7 +249,21 @@ const MoviePage = () => {
             </div>
 
             <div className="p-6">
-              {bookingStatus === 'success' ? (
+              {bookingStatus === 'error' ? (
+                <div className="text-center py-12">
+                  <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <BiX className="text-red-600 text-3xl" />
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-800 mb-2">Booking Failed</h3>
+                  <p className="text-gray-500 text-sm mb-6">Seats may already be booked. Please select different seats.</p>
+                  <button
+                    onClick={() => setBookingStatus(null)}
+                    className="bg-red-600 text-white px-6 py-2.5 rounded-xl font-semibold hover:bg-red-700"
+                  >
+                    Try Again
+                  </button>
+                </div>
+              ) : bookingStatus === 'success' ? (
                 <div className="text-center py-12">
                   <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                     <BiCheck className="text-green-600 text-3xl" />
